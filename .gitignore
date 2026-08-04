@@ -2,7 +2,10 @@ node_modules/
 .env
 .env.local
 *.log
+logs/
 .DS_Store
 coverage/
 .nyc_output/
 docs/api-discovery.json
+docs/step*.png
+docs/submission_screenshots/
