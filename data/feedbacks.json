@@ -1,0 +1,62 @@
+[
+  {
+    "id": "01-issue-tracker",
+    "perspective": "Privatperson",
+    "topic": "Digitalisierung",
+    "authority": "BMI / BMDS",
+    "plz": "10557",
+    "title": "Transparenter Issue-Tracker & Bearbeitungsstatus für Bürger-Feedback",
+    "description": "Bürgeranliegen und Vorschläge zum Bürokratieabbau sollten in einem öffentlichen, transparenten Issue-Tracker einsehbar sein (ähnlich Open-Source-Plattformen). Dies vermeidet doppelte Meldungen, stärkt das Vertrauen in die Verwaltung und erlaubt Bürgerinnen und Bürgern, den Bearbeitungsfortschritt und Beschlüsse nachzuvollziehen.",
+    "dryRun": true
+  },
+  {
+    "id": "02-foss-first",
+    "perspective": "Privatperson",
+    "topic": "Digitalisierung",
+    "authority": "BMI",
+    "plz": "10557",
+    "title": "Public Money, Public Code: Konsequente FOSS-Strategie für Verwaltungssoftware",
+    "description": "Öffentlich finanzierte Softwareentwicklung für Behörden und Verwaltungsportale sollte standardmäßig unter Freien und Open-Source-Lizenzen (FOSS) veröffentlicht werden. Dies verhindert Vendor-Lock-ins, ermöglicht unabhängige Sicherheitsaudits durch die Civic-Tech-Community und erlaubt Nachnutzung in Kommunen ohne doppelte Lizenzkosten.",
+    "dryRun": true
+  },
+  {
+    "id": "03-hackathons-collaboration",
+    "perspective": "Privatperson",
+    "topic": "Digitalisierung",
+    "authority": "BMDS",
+    "plz": "10587",
+    "title": "Regelmäßige Hackathons & Open-Gov-Kooperationen zur Digitalisierung",
+    "description": "Verwaltungen sollten regelmäßige Formate und Sandbox-Umgebungen bereitstellen, in denen Entwicklerinnen, Designer und Civic-Tech-Initiativen gemeinsam mit Beamtinnen an der Usability und Digitalisierung von Verwaltungsprozessen arbeiten können. Offene Schnittstellen und Datenmodelle bilden hierfür die Grundlage.",
+    "dryRun": true
+  },
+  {
+    "id": "04-elster-open-api",
+    "perspective": "Privatperson",
+    "topic": "Behördenprozesse",
+    "authority": "BZSt / Finanzverwaltung",
+    "plz": "10117",
+    "title": "Moderne REST/JSON-APIs & Open Standards für ELSTER-Schnittstellen",
+    "description": "Der Zugang zu ELSTER und steuerlichen Datenübermittlungen beruht historisch auf proprietären Bibliotheken (ERiC). Für eine barrierefreie Integration in moderne, plattformunabhängige Open-Source-Software wird eine offene, gut dokumentierte REST/JSON-Schnittstelle mit modernen Authentifizierungsstandards benötigt.",
+    "dryRun": true
+  },
+  {
+    "id": "05-bundid-sso",
+    "perspective": "Privatperson",
+    "topic": "Digitalisierung",
+    "authority": "BMI",
+    "plz": "10557",
+    "title": "Standardisierung & barrierefreie Integration von BundID / Single Sign-On",
+    "description": "Das BundID-Konto sollte über offene Standards wie OAuth 2.0 / OpenID Connect (OIDC) nativ in Bürgerdienste integrierbar sein. Die Authentifizierung per Online-Ausweis (eID) muss auf allen gängigen Betriebssystemen ohne proprietäre Hürden und mit klaren Fehlermeldungen funktionieren.",
+    "dryRun": true
+  },
+  {
+    "id": "06-meta-einfach-machen-api",
+    "perspective": "Privatperson",
+    "topic": "Digitalisierung",
+    "authority": "BMDS / einfach-machen.gov.de",
+    "plz": "10587",
+    "title": "Meta-Meldung: Maschinenlesbare REST/JSON API für das Meldeportal einführen",
+    "description": "Das Portal einfach-machen.gov.de setzt derzeit auf ein serverseitiges TYPO3 FormFramework mit FormCrShield-Mechanismen. Um automatisierte Einreichungen, Bürger-Werkzeuge und Anbindungen aus der Civic-Tech-Community zu ermöglichen, sollte eine offene, dokumentierte REST/JSON-Schnittstelle (mit Rate-Limiting & API-Keys) bereitgestellt werden.",
+    "dryRun": true
+  }
+]
