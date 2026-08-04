@@ -3,15 +3,32 @@ const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
 
+const DEBUG = process.env.DEBUG === 'true';
+
+/**
+ * Log submission attempt to logs/submissions.log
+ */
+function logSubmission(feedbackData, status, details = {}) {
+  const logsDir = path.join(__dirname, '../logs');
+  if (!fs.existsSync(logsDir)) {
+    fs.mkdirSync(logsDir, { recursive: true });
+  }
+
+  const logEntry = {
+    timestamp: new Date().toISOString(),
+    perspective: feedbackData.perspective,
+    topic: feedbackData.topic,
+    status: status,
+    dryRun: feedbackData.dryRun !== false,
+    details: details
+  };
+
+  fs.appendFileSync(path.join(logsDir, 'submissions.log'), JSON.stringify(logEntry) + '\n');
+}
+
 /**
  * Submits feedback to einfach-machen.gov.de using Playwright browser automation
  * to safely handle TYPO3 CSRF state tokens, FormCrShield anti-bot protection, and dynamic honeypot fields.
- * 
- * @param {Object} feedbackData
- * @param {string} feedbackData.perspective - e.g. "Privatperson", "Unternehmen", "Selbstständig", "Verwaltung", "Verbände", "Verein", "Sonstige"
- * @param {string} feedbackData.topic - e.g. "Digitalisierung", "Arbeit", "Behördenprozesse", etc.
- * @param {string} feedbackData.description - Detailed description text (up to 3000 chars)
- * @param {boolean} [feedbackData.dryRun=true] - If true, stops right before clicking the final submission button to prevent spamming
  */
 async function submitFeedback(feedbackData = {}) {
   const isHeadless = process.env.HEADLESS !== 'false';
@@ -22,13 +39,27 @@ async function submitFeedback(feedbackData = {}) {
     perspective: feedbackData.perspective || 'Privatperson',
     topic: feedbackData.topic || 'Digitalisierung',
     description: feedbackData.description || 'Automatisiertes Bürger-Feedback zur Digitalisierung der Verwaltungsprozesse.',
+    authority: feedbackData.authority || 'BMDS',
+    plz: feedbackData.plz || '10587',
     dryRun: dryRun
   };
 
-  console.log(`📝 Starting feedback submission process (dryRun: ${data.dryRun}, headless: ${isHeadless})...`);
-  const browser = await chromium.launch({ headless: isHeadless });
-  const context = await browser.newContext();
+  console.log(`🚀 Starting submission process (dryRun: ${data.dryRun}, headless: ${isHeadless})...`);
+  const browser = await chromium.launch({ 
+    headless: isHeadless,
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
+  });
+  
+  const context = await browser.newContext({
+    userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+  });
+  
   const page = await context.newPage();
+
+  if (DEBUG) {
+    page.on('console', msg => console.log('PAGE LOG:', msg.text()));
+    page.on('request', req => console.log('REQUEST:', req.url()));
+  }
 
   const screenshotsDir = path.join(__dirname, '../docs/submission_screenshots');
   if (!fs.existsSync(screenshotsDir)) {
@@ -36,86 +67,119 @@ async function submitFeedback(feedbackData = {}) {
   }
 
   try {
-    // Step 1: Navigate to form
+    // Step 1: Perspective
     console.log(`🔍 Step 1: Navigating to ${targetUrl}...`);
-    await page.goto(targetUrl, { waitUntil: 'networkidle' });
+    await page.goto(targetUrl, { waitUntil: 'networkidle', timeout: 30000 });
 
-    // Step 1: Select Perspective
-    console.log(`👉 Selecting perspective: "${data.perspective}"...`);
+    console.log(`👉 Step 1: Selecting perspective "${data.perspective}"...`);
     const perspectiveInput = page.locator(`input[value="${data.perspective}"]`);
     if (await perspectiveInput.count() > 0) {
       await perspectiveInput.check({ force: true });
     } else {
       await page.check('input[type="radio"]', { force: true });
     }
-    await page.screenshot({ path: path.join(screenshotsDir, '01_perspective_selected.png') });
     await page.click('button[type="submit"]:has-text("Weiter zur Themenauswahl")');
     await page.waitForLoadState('networkidle');
+    console.log('✅ Step 1: Perspective selected');
 
-    // Step 2: Select Topic / Category
-    console.log(`👉 Step 2: Selecting topic category...`);
+    // Step 2: Topic
+    console.log(`👉 Step 2: Selecting topic "${data.topic}"...`);
     const topicRadio = page.locator(`input[value="${data.topic}"]`);
     if (await topicRadio.count() > 0) {
       await topicRadio.check({ force: true });
     } else {
-      // Fallback: check first available topic radio
-      const firstRadio = page.locator('input[type="radio"]').first();
-      await firstRadio.check({ force: true });
+      await page.locator('input[type="radio"]').first().check({ force: true });
     }
-    await page.screenshot({ path: path.join(screenshotsDir, '02_topic_selected.png') });
-    
-    const nextButtonsStep2 = page.locator('button[type="submit"]');
-    await nextButtonsStep2.last().click();
+    await page.locator('button[type="submit"]').last().click();
     await page.waitForLoadState('networkidle');
+    console.log('✅ Step 2: Topic selected');
 
-    // Step 3: Fill Description
+    // Step 3: Description
     console.log(`✍️ Step 3: Filling description field (${data.description.length} chars)...`);
     const textarea = page.locator('textarea');
     if (await textarea.count() > 0) {
       await textarea.fill(data.description.substring(0, 3000));
     }
-    await page.screenshot({ path: path.join(screenshotsDir, '03_description_filled.png') });
-
-    const nextButtonsStep3 = page.locator('button[type="submit"]');
-    await nextButtonsStep3.last().click();
+    await page.locator('button[type="submit"]').last().click();
     await page.waitForLoadState('networkidle');
+    console.log('✅ Step 3: Description filled');
 
-    // Step 4: Review / Authority Step
+    // Detect Honeypot Field for auditing
+    const honeypotField = await page.evaluate(() => {
+      const inputs = Array.from(document.querySelectorAll('input[type="text"]'));
+      const hidden = inputs.find(i => i.style.display === 'none' || i.style.visibility === 'hidden' || i.offsetHeight === 0);
+      return hidden ? hidden.name : null;
+    });
+
+    if (honeypotField) {
+      console.log(`⚠️  Dynamic honeypot field detected: ${honeypotField} (safely left empty)`);
+    }
+
+    // Step 4: Review / Submit
     console.log(`📋 Step 4: Final confirmation step reached.`);
     await page.screenshot({ path: path.join(screenshotsDir, '04_final_review.png'), fullPage: true });
 
     if (data.dryRun) {
-      console.log('⚠️ DRY RUN ENABLED: Submission verified up to final review step. Form was NOT submitted to live servers.');
+      console.log('⚠️ DRY RUN ENABLED: Submission verified up to final review step.');
+      logSubmission(data, 'SUCCESS_DRY_RUN', { honeypotField });
     } else {
-      console.log('🚀 Submitting form...');
+      console.log('🚀 Submitting live form...');
       const submitButton = page.locator('button[type="submit"]:has-text("Absenden")');
       if (await submitButton.count() > 0) {
         await submitButton.click();
         await page.waitForLoadState('networkidle');
         console.log('🎉 Form successfully submitted!');
         await page.screenshot({ path: path.join(screenshotsDir, '05_submission_success.png') });
+        logSubmission(data, 'SUCCESS_LIVE', { honeypotField });
       }
     }
 
   } catch (error) {
-    console.error('❌ Feedback submission failed:', error);
+    console.error('💥 Error during submission:', error);
+    logSubmission(data, 'ERROR', { error: error.message });
     throw error;
   } finally {
     await browser.close();
   }
 }
 
+/**
+ * Wraps submission in exponential backoff retries
+ */
+async function submitWithRetry(feedbackData, maxRetries = 3) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      await submitFeedback(feedbackData);
+      return;
+    } catch (error) {
+      console.error(`❌ Attempt ${attempt}/${maxRetries} failed:`, error.message);
+      if (attempt === maxRetries) {
+        throw new Error(`Submission failed after ${maxRetries} attempts`);
+      }
+      const delay = Math.pow(2, attempt) * 1000;
+      console.log(`⏳ Waiting ${delay}ms before retry...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+}
+
 const defaultExample = {
   perspective: 'Privatperson',
   topic: 'Digitalisierung',
-  description: 'Vorschlag zur Beschleunigung digitaler Verwaltungsanträge und Abbau von Schriftformerfordernissen.',
+  description: 'Vorschlag zur Beschleunigung digitaler Verwaltungsanträge durch optimierte Formularprozesse.',
+  authority: 'BMDS',
+  plz: '10587',
   dryRun: true
 };
 
 if (import.meta.main || require.main === module) {
-  submitFeedback(defaultExample)
-    .then(() => console.log('✅ Submission automation script completed successfully.'))
-    .catch(err => console.error('💥 Fatal error in submission script:', err));
+  if (defaultExample.dryRun) {
+    console.log('🧪 DRY RUN MODE - No actual live submission');
+  }
+  
+  submitWithRetry(defaultExample)
+    .then(() => console.log('🎉 Process completed successfully.'))
+    .catch(err => console.error('❌ Process failed:', err));
 }
 
-module.exports = { submitFeedback };
+module.exports = { submitFeedback, submitWithRetry, logSubmission };
