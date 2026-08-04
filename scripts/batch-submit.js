@@ -1,28 +1,37 @@
 const { submitWithRetry } = require('./submit-feedback');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
-const items = [
-  {
-    perspective: 'Privatperson',
-    topic: 'Digitalisierung',
-    description: 'Verwaltungsleistungen sollten ohne vorherige Registrierung im Nutzerkonto direkt nutzbar sein.',
-    dryRun: true
-  },
-  {
-    perspective: 'Unternehmen',
-    topic: 'Digitalisierung',
-    description: 'Automatisierte Machine-to-Machine Schnittstellen für Gewerbeanmeldungen einrichten.',
-    dryRun: true
+function loadFeedbackItems() {
+  const dataPath = path.join(__dirname, '../data/feedbacks.json');
+  if (fs.existsSync(dataPath)) {
+    try {
+      const raw = fs.readFileSync(dataPath, 'utf-8');
+      return JSON.parse(raw);
+    } catch (e) {
+      console.warn('⚠️ Could not parse data/feedbacks.json, using fallback sample items.');
+    }
   }
-];
 
-async function runBatchSubmission(batchItems, delayMs = 120000) {
-  console.log(`📦 Starting batch submission for ${batchItems.length} items (rate limit delay: ${delayMs / 1000}s)...`);
+  return [
+    {
+      perspective: 'Privatperson',
+      topic: 'Digitalisierung',
+      description: 'Verwaltungsleistungen sollten ohne vorherige Registrierung im Nutzerkonto direkt nutzbar sein.',
+      dryRun: true
+    }
+  ];
+}
 
-  for (let i = 0; i < batchItems.length; i++) {
-    const item = batchItems[i];
+async function runBatchSubmission(batchItems = null, delayMs = 120000) {
+  const itemsToProcess = batchItems || loadFeedbackItems();
+  console.log(`📦 Starting batch submission for ${itemsToProcess.length} items (rate limit delay: ${delayMs / 1000}s)...`);
+
+  for (let i = 0; i < itemsToProcess.length; i++) {
+    const item = itemsToProcess[i];
     console.log(`\n----------------------------------------`);
-    console.log(`Processing item ${i + 1}/${batchItems.length}: [${item.perspective}] ${item.topic}`);
+    console.log(`Processing item ${i + 1}/${itemsToProcess.length}: [${item.perspective}] ${item.title || item.topic}`);
     console.log(`----------------------------------------`);
 
     try {
@@ -32,7 +41,7 @@ async function runBatchSubmission(batchItems, delayMs = 120000) {
       console.error(`❌ Item ${i + 1} failed:`, err.message);
     }
 
-    if (i < batchItems.length - 1) {
+    if (i < itemsToProcess.length - 1) {
       console.log(`⏳ Rate limiting: Waiting ${delayMs / 1000}s before next submission...`);
       await new Promise(resolve => setTimeout(resolve, delayMs));
     }
@@ -42,7 +51,7 @@ async function runBatchSubmission(batchItems, delayMs = 120000) {
 }
 
 if (import.meta.main || require.main === module) {
-  runBatchSubmission(items, 2000); // 2s delay for batch test
+  runBatchSubmission(null, process.env.BATCH_DELAY_MS ? parseInt(process.env.BATCH_DELAY_MS, 10) : 2000);
 }
 
-module.exports = { runBatchSubmission };
+module.exports = { runBatchSubmission, loadFeedbackItems };
