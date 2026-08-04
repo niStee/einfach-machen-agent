@@ -6,7 +6,8 @@
   "scripts": {
     "discover": "bun scripts/discover-api.js",
     "submit": "bun scripts/submit-feedback.js",
-    "test": "bun scripts/discover-api.js && bun scripts/submit-feedback.js",
+    "batch": "bun scripts/batch-submit.js",
+    "test": "bun test",
     "start-mcp": "bunx @executeautomation/playwright-mcp-server --port 3550"
   },
   "dependencies": {
