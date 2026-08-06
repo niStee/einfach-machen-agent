@@ -182,14 +182,14 @@ Bundesland-Auswahl vereinfachen: Automatische Zuordnung des Bundeslands anhand d
 
 Einreichung
 
-Schreibe dein RFC als formelle E-Mail an hotline@elster.de mit dem Betreff „Verbesserungsvorschlag: UX-Fehlerbehebung Steuernummer" und liste die Punkte strukturiert auf. Alternativ kannst du im ELSTER-Anwenderforum unter „Verbesserungsvorschläge zu Mein ELSTER" posten – dort werden Vorschläge offiziell gesammelt. Für größere Änderungen ist das Bayerische Landesamt für Steuern federführend zuständig, an das du dich direkt wenden kannst.
+Schreibe dein RFC als formelle E-Mail an [REDACTED_EMAIL] mit dem Betreff „Verbesserungsvorschlag: UX-Fehlerbehebung Steuernummer" und liste die Punkte strukturiert auf. Alternativ kannst du im ELSTER-Anwenderforum unter „Verbesserungsvorschläge zu Mein ELSTER" posten – dort werden Vorschläge offiziell gesammelt. Für größere Änderungen ist das Bayerische Landesamt für Steuern federführend zuständig, an das du dich direkt wenden kannst.
 forum.elster
 +1
 
 Beispieltext für dein RFC:
 
 Betreff: Verbesserungsvorschlag: UX-Fehlerbehebung bei ungültiger Steuernummer
-An: hotline@elster.de
+An: [REDACTED_EMAIL]
 Datum: [aktuelles Datum]
 Zusammenfassung: Die Fehlermeldung „Ungültige Steuernummer" ist für Nutzer nicht hilfreich und führt zu unnötigen Abbrüchen.
 Kritikpunkte:
@@ -243,7 +243,7 @@ Automatische Vorbelegung: Wenn du eine neue Erklärung startest, sollte das Syst
 Formulierung für dein RFC
 
 Betreff: Verbesserungsvorschlag: UX-Optimierung der Einwilligung und Steuernummer-Speicherung
-An: hotline@elster.de
+An: [REDACTED_EMAIL]
 Zusammenfassung: Die aktuelle Umsetzung verlagert administrative Komplexität auf den Nutzer und ist fehleranfällig.
 Kritikpunkte:
 
