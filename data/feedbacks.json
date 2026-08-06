@@ -1,9 +1,9 @@
 [
   {
     "perspective": "Bürgerin / Bürger",
-    "topic": "Digitale Souveränität",
-    "title": "Einhaltung von Public Money = Public Code & Ausstieg aus Vendor Lock-in",
-    "description": "Problem:\nÖffentliche Verwaltungen geben dreistellige Millionenbeträge für proprietäre Softwarelizenzen und US-Cloud-Abos aus (z. B. Microsoft 365), während digitale Souveränität und datenschutzkonforme Open-Source-Alternativen vernachlässigt werden. Dies widerspricht dem Beschluss der Ministerpräsidentenkonferenz zur föderalen Modernisierungsagenda (Frist 31. März 2027) sowie den Vorgaben für digitale Souveränität in den Digitalgesetzen der Länder.\n\nVorschlag:\n1. Konsequente Umsetzung von 'Public Money = Public Code' bei allen IT-Neuanschaffungen der öffentlichen Hand.\n2. Bereitstellung und Förderung von Open-Source-Arbeitsplätzen (openDesk / Phoenix) für Behörden und Kommunen.\n3. Transparenter Kostenvergleich zwischen proprietären Cloud-Lizenzen und Open-Source-Eigenbetrieb vor jeder Großbeschaffung.",
-    "authority": "Bundesministerium des Innern / IT-Planungsrat"
+    "topic": "Digitale Souveränität & FOSS",
+    "title": "Digitale Souveränität: Ausstieg aus MS365 Lock-in & Einhaltung des Digitalgesetzes",
+    "description": "Problem:\nÖffentliche Verwaltungen geben dreistellige Millionenbeträge für proprietäre Softwarelizenzen und US-Cloud-Abos aus — z. B. Bayern mit rund 360 Millionen Euro an Microsoft (2020–2027) oder die Bundesverwaltung mit Kostensteigerungen von 8,8 Mio. € (2020) auf 18,3 Mio. € (2025). Dies missachtet u. a. das Bayerische Digitalgesetz von 2022, das Behörden bei Neuanschaffungen zur Nutzung von Open Source verpflichtet, sowie den Beschluss der Ministerpräsidentenkonferenz zur föderalen Modernisierungsagenda (Frist: 31. März 2027 für souveräne Alternativen).\n\nVorschlag:\n1. Konsequente Umsetzung des Grundsatzes 'Public Money = Public Code' bei allen IT-Neuanschaffungen auf Landes- und Bundesebene.\n2. Einhaltung der gesetzlichen Vorrangregel für Open Source und Verbindlichkeit der Frist zum 31. März 2027.\n3. Beschleunigte Bereitstellung und Nutzung quelloffener Arbeitsplätze (z. B. openDesk / Phoenix) in der Verwaltung.",
+    "authority": "Bayerisches Staatsministerium für Digitales / IT-Planungsrat / BMI"
   }
 ]
