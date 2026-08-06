@@ -16,5 +16,14 @@
     "authority": "Bayerisches Landesamt für Steuern / Bundesfinanzministerium",
     "status": "submitted",
     "submittedAt": "2026-08-06T21:04:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Digitale Souveränität & FOSS",
+    "title": "Digitale Souveränität: Ausstieg aus MS365 Lock-in & Einhaltung des Digitalgesetzes",
+    "description": "Problem:\nÖffentliche Verwaltungen geben dreistellige Millionenbeträge für proprietäre Softwarelizenzen und US-Cloud-Abos aus — z. B. Bayern mit rund 360 Millionen Euro an Microsoft (2020–2027) oder die Bundesverwaltung mit Kostensteigerungen von 8,8 Mio. € (2020) auf 18,3 Mio. € (2025). Dies missachtet u. a. das Bayerische Digitalgesetz von 2022, das Behörden bei Neuanschaffungen zur Nutzung von Open Source verpflichtet, sowie den Beschluss der Ministerpräsidentenkonferenz zur föderalen Modernisierungsagenda (Frist: 31. März 2027 für souveräne Alternativen).\n\nVorschlag:\n1. Konsequente Umsetzung des Grundsatzes 'Public Money = Public Code' bei allen IT-Neuanschaffungen auf Landes- und Bundesebene.\n2. Einhaltung der gesetzlichen Vorrangregel für Open Source und Verbindlichkeit der Frist zum 31. März 2027.\n3. Beschleunigte Bereitstellung und Nutzung quelloffener Arbeitsplätze (z. B. openDesk / Phoenix) in der Verwaltung.",
+    "authority": "Bayerisches Staatsministerium für Digitales / IT-Planungsrat / BMI",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:08:00.000Z"
   }
 ]
