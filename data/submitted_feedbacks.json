@@ -61,5 +61,23 @@
     "authority": "Bundesbeauftragter für den Datenschutz und die Informationsfreiheit (BfDI) / BMI",
     "status": "submitted",
     "submittedAt": "2026-08-06T21:14:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Digitale Identität & Führungszeugnis",
+    "title": "Führungszeugnis & eID: Smartphone-NFC als Pflichtstandard & digitaler Direktversand",
+    "description": "Problem:\nBeim Online-Antrag auf behördliche Führungszeugnisse (Belegart O) oder eID-Funktionen werden Bürgerinnen und Bürger häufig noch auf veraltete USB-Kartenleser hingewiesen. Zudem wird das Führungszeugnis immer noch per Schneckenpost im Papierbrief an die Empfängerbehörde geschickt.\n\nVorschlag:\n1. Verpflichtende Bereitstellung der Smartphone-NFC-Authentifizierung (AusweisApp / Smart-eID) ohne Hardware-Kartenleser-Zwang in allen Portalen.\n2. Vollautomatischer digitaler Direktversand des Führungszeugnisses (PDF/A mit qualifiziertem Siegel) direkt an die anfordernde Behörde (z. B. Bürgeramt / Prüfungsamt).",
+    "authority": "Bundesamt für Justiz / Bundesministerium der Justiz",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:20:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Bürokratieabbau & Schriftform",
+    "title": "Systematischer Entfall des analogen Schriftformerfordernisses (§ 3a VwVfG)",
+    "description": "Problem:\nViele Behörden verlangen für Anträge immer noch eine eigenhändige handschriftliche Unterschrift auf Papier oder einen Postbrief, obwohl die BundID oder eID-Anmeldung längst vorliegt.\n\nVorschlag:\n1. Gesetzliche Streichung des analogen Schriftformerfordernisses für alle Anträge auf Kommunal-, Landes- und Bundesebene, sofern eine eID-/BundID-Authentifizierung erfolgt ist.\n2. Verbot des E-Mail-Ausdruck-Zwangs in Verwaltungsabläufen.",
+    "authority": "Bundesministerium des Innern / Bundesministerium der Justiz",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:20:00.000Z"
   }
 ]
