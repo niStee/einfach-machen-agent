@@ -7,7 +7,7 @@
     "plz": "10557",
     "title": "Transparenter Issue-Tracker & Bearbeitungsstatus für Bürger-Feedback",
     "description": "Bürgeranliegen und Vorschläge zum Bürokratieabbau sollten in einem öffentlichen, transparenten Issue-Tracker einsehbar sein (ähnlich Open-Source-Plattformen). Dies vermeidet doppelte Meldungen, stärkt das Vertrauen in die Verwaltung und erlaubt Bürgerinnen und Bürgern, den Bearbeitungsfortschritt und Beschlüsse nachzuvollziehen.",
-    "dryRun": true
+    "dryRun": false
   },
   {
     "id": "02-foss-first",
@@ -57,6 +57,16 @@
     "plz": "10587",
     "title": "Meta-Meldung: Maschinenlesbare REST/JSON API für das Meldeportal einführen",
     "description": "Das Portal einfach-machen.gov.de setzt derzeit auf ein serverseitiges TYPO3 FormFramework mit FormCrShield-Mechanismen. Um automatisierte Einreichungen, Bürger-Werkzeuge und Anbindungen aus der Civic-Tech-Community zu ermöglichen, sollte eine offene, dokumentierte REST/JSON-Schnittstelle (mit Rate-Limiting & API-Keys) bereitgestellt werden.",
+    "dryRun": false
+  },
+  {
+    "id": "07-ai-transparency-standards",
+    "perspective": "Privatperson",
+    "topic": "Digitalisierung",
+    "authority": "BMBF / BMDS",
+    "plz": "10557",
+    "title": "Verbindliche Transparenzstandards für staatlich finanzierte KI-Modelle",
+    "description": "Öffentlich finanzierte KI-Projekte werden häufig als „offen“ oder „souverän“ kommuniziert, obwohl Modellgewichte, Lizenzen, Trainingsdaten-Dokumentation oder reproduzierbare Evaluationen noch nicht allgemein verfügbar sind. Um Vertrauen und Nachnutzbarkeit sicherzustellen, sollte für jedes überwiegend staatlich geförderte KI-Basismodell ein verpflichtendes öffentliches Transparenzblatt eingeführt werden (inkl. Gewichte-Status, Fördersumme, Lizenz, Datenprovenienz, Hardware-Abhängigkeiten und unabhängigen Evaluierungsprotokollen).",
     "dryRun": true
   }
 ]
