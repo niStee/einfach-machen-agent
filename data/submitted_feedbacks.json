@@ -79,5 +79,23 @@
     "authority": "Bundesministerium des Innern / Bundesministerium der Justiz",
     "status": "submitted",
     "submittedAt": "2026-08-06T21:20:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Mobilität & ÖPNV-Digitalisierung",
+    "title": "Standardisierte bundesweite ÖPNV-API & einheitliche Deutschlandticket-Verwaltung",
+    "description": "Problem:\nDas Deutschlandticket und öffentliche Nahverkehrs-Abos werden über hunderte regionale Verkehrsverbünde mit zersplitterten Apps, unterschiedlichen Kündigungsfristen und isolierten Kundenportalen verwaltet. Bürgerinnen und Bürger haben kein zentrales Portal für digitale Tickets, Abo-Pausierungen oder Fahrgastrechte-Anträge.\n\nVorschlag:\n1. Bereitstellung einer offenen, bundesweit einheitlichen Schnittstelle (API) zur Verwaltung von ÖPNV-Abos und Deutschlandtickets.\n2. Integration einer zentralen Abo-Verwaltungs- und Fahrgastrechte-Funktion im Bundesportal / Bürgerkonto.",
+    "authority": "Bundesministerium für Digitales und Verkehr / Verkehrsministerkonferenz",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:23:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Verwaltungsmodernisierung & Meldewesen",
+    "title": "Vollständig digitale Wohnsitz-Ummeldung ohne Terminzwang im Bürgeramt",
+    "description": "Problem:\nTrotz Onlinezugangsgesetz (OZG) verlangen viele Bürgerämter immer noch ein persönliches Erscheinen vor Ort für die Wohnsitzummeldung oder die Ausgabe des physischen Adressklebeetiketts auf dem Personalausweis.\n\nVorschlag:\n1. Bundesweit flächendeckende, voll-digitale Ummeldung per eID / BundID ohne Vor-Ort-Terminzwang.\n2. Digitaler Adressnachweis (PDF/A mit qualifiziertem Siegel) und automatisches Update des eID-Chips ohne analogen Post-Medienbruch.",
+    "authority": "Bundesministerium des Innern / Kommunalverwaltungen",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:23:00.000Z"
   }
 ]
