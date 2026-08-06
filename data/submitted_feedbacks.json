@@ -124,5 +124,32 @@
     "authority": "Kultusministerkonferenz / Bundesministerium des Innern / Kommunalverwaltungen",
     "status": "submitted",
     "submittedAt": "2026-08-06T21:26:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Standesamt & Personenstandswesen",
+    "title": "Standesamt & Eheschließung: Digitaler Registerabgleich statt Papier-Geburtsurkunden",
+    "description": "Problem:\nStandesämter verlangen bei Eheschließungen und Personenstandsanmeldungen immer noch gedruckte, beglaubigte Papier-Geburtsurkunden und Ehefähigkeitszeugnisse im Original per Post oder persönlicher Abgabe, obwohl Personenstandsregister längst elektronisch geführt werden.\n\nVorschlag:\n1. Automatischer behördenübergreifender Digitalabgleich der Personenstandsdaten zwischen Standesämtern ohne Nachweispflicht für Bürgerinnen und Bürger.\n2. Einheitliche Online-Terminvergabe, eID-Authentifizierung und digitaler Dokumentenupload.",
+    "authority": "Bundesministerium des Innern / Landesinnenministerien",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:31:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Gesundheitswesen & Familienversicherung",
+    "title": "Automatische digitale Familienversicherung nach Eheschließung und Geburt",
+    "description": "Problem:\nNach einer Hochzeit oder der Geburt eines Kindes muss die Aufnahme von Ehepartnern oder Neugeborenen in die gesetzliche Familienversicherung bei der Krankenkasse auf separaten Papierformularen mit beigefügten Heirats- und Geburtsurkunden beantragt werden.\n\nVorschlag:\n1. Automatische digitale Notifizierung der zuständigen Krankenkasse durch das Standesamt nach Eheschließung oder Geburt.\n2. Medienbruchfreie 1-Klick-Online-Bestätigung im Bürgerkonto ohne Papiernachweise.",
+    "authority": "Bundesministerium für Gesundheit / Krankenkassen",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:31:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Kreislaufwirtschaft & Digitale Bildung",
+    "title": "Staatliches Förderprogramm für Maker-Spaces, Repair-Cafés & 3D-Druck in Bibliotheken",
+    "description": "Problem:\nNachhaltigkeit und das Reparieren von Gebrauchsgegenständen scheitern in Deutschland oft am fehlenden Zugang zu Spezialwerkzeugen, 3D-Druckern für Ersatzteile oder Fachwissen. Öffentliche Räume für zirkuläre Wirtschaft fehlen in vielen Kommunen.\n\nVorschlag:\n1. Bundesweites Förderprogramm zur Ausrüstung öffentlicher Bibliotheken und Kulturzentren mit Maker-Spaces, Repair-Cafés und 3D-Druck-Arbeitsplätzen.\n2. Förderung von Citizen Science, technischer Bildung und Abfallvermeidung in der Kommunalpolitik.",
+    "authority": "Bundesministerium für Umwelt, Naturschutz, nukleare Sicherheit und Verbraucherschutz / BMBF",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:31:00.000Z"
   }
 ]
