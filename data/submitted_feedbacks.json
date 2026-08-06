@@ -97,5 +97,32 @@
     "authority": "Bundesministerium des Innern / Kommunalverwaltungen",
     "status": "submitted",
     "submittedAt": "2026-08-06T21:23:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Gesetzgebung & Transparenz",
+    "title": "Transparenz-Register für Gesetzessynopsen & Verbändestellungnahmen (§ 42 GGO)",
+    "description": "Problem:\nGesetzessynopsen, Referentenentwürfe und Stellungnahmen von Lobbyverbänden bei Bundes- und Landesgesetzen werden oft erst verzögert oder versteckt auf verschiedenen Ministeriumsseiten veröffentlicht. Bürgerinnen und Bürger sowie die Fachöffentlichkeit können Textänderungen und Einflüsse im Gesetzgebungsprozess nicht in Echtzeit nachvollziehen.\n\nVorschlag:\n1. Verpflichtende, automatische Echtzeit-Veröffentlichung aller Gesetzessynopsen, Referentenentwürfe und Verbändestellungnahmen auf einer zentralen Plattform.\n2. Bereitstellung aller Dokumente im maschinenlesbaren Open-Data-Format (JSON/XML/PDF-A).",
+    "authority": "Bundesministerium der Justiz / Bundeskanzleramt / IT-Planungsrat",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:26:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Verbraucherschutz & Produktsicherheit",
+    "title": "Zentrales Open-Data-Portal für Produktsicherheit, Lebensmitteltests und Umweltdaten",
+    "description": "Problem:\nStaatliche Produktsicherheitswarnungen, Prüfberichte der Lebensmittelüberwachung und Umweltdaten (z. B. von BauA, BAM, UBA, lebensmittelwarnung.de) sind über zersplitterte Behördenseiten verteilt und meist nur als statische PDFs abrufbar.\n\nVorschlag:\n1. Zusammenführung aller behördlichen Sicherheits-, Prüf- und Rückrufwarnungen in einer zentralen Open-Data-API.\n2. Bereitstellung standardisierter Prüfdaten zur unkomplizierten Einbindung in Verbraucher-Apps und digitale Assistenzsysteme.",
+    "authority": "Bundesministerium für Umwelt, Naturschutz, nukleare Sicherheit und Verbraucherschutz / BMEL",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:26:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Bildung & Kultur-Digitalisierung",
+    "title": "BundID-Integration für Bibliotheken, Volkshochschulen & Kulturpässe",
+    "description": "Problem:\nDie Nutzung öffentlicher Bibliotheken, Volkshochschulkurse und Kulturangebote erfordert in jeder Kommune separate Vor-Ort-Anmeldungen, eigene Plastikausweise und Papierformulare.\n\nVorschlag:\n1. Nahtlose Verknüpfung von Bibliotheksausweisen, VHS-Konten und Kulturpässen direkt mit der BundID.\n2. Digitaler, hürdenfreier Zugang zu allen öffentlichen Bildungs- und Kultureinrichtungen bundesweit.",
+    "authority": "Kultusministerkonferenz / Bundesministerium des Innern / Kommunalverwaltungen",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:26:00.000Z"
   }
 ]
