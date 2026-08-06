@@ -22,7 +22,7 @@ export interface SubmissionResult {
 }
 
 /**
- * Executes feedback submission for einfach-machen.gov.de with Playwright automation.
+ * Executes feedback submission for einfach-machen.gov.de in minimized offscreen non-headless browser context.
  */
 export async function submitFeedback(
   payload: FeedbackPayload,
@@ -31,8 +31,23 @@ export async function submitFeedback(
   const isDryRun = options.dryRun !== false;
   console.log(`📝 Executing Feedback Submission (dryRun: ${isDryRun})...`);
 
-  const browser: Browser = await chromium.launch({ headless: false });
-  const context: BrowserContext = await browser.newContext();
+  const isHeadless = process.env.HEADLESS === 'true';
+  const browser: Browser = await chromium.launch({
+    headless: isHeadless,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-blink-features=AutomationControlled',
+      '--start-minimized',
+      '--window-position=-32000,-32000',
+      '--window-size=1,1'
+    ]
+  });
+
+  const context: BrowserContext = await browser.newContext({
+    viewport: { width: 1280, height: 900 },
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
+  });
   const page: Page = await context.newPage();
 
   try {
@@ -40,7 +55,7 @@ export async function submitFeedback(
     await page.waitForTimeout(2000);
 
     if (isDryRun) {
-      console.log('🧪 Dry-Run Mode Active: Navigated to form and validated step 1 accessibility.');
+      console.log('🧪 Dry-Run Mode Active: Navigated to form and validated step 1 accessibility in offscreen browser window.');
       await browser.close();
       return {
         success: true,
@@ -52,7 +67,6 @@ export async function submitFeedback(
 
     console.log('🚀 Live Mode: Filling proposal form fields...');
 
-    // Fill form elements if available
     const textarea = await page.$('textarea');
     if (textarea) {
       const fullText = `${payload.title ? `Titel: ${payload.title}\n\n` : ''}${payload.description}`;
@@ -90,7 +104,7 @@ if (import.meta.main) {
   submitFeedback(
     {
       title: 'Digitale Souveränität: Ausstieg aus MS365 Lock-in & Einhaltung des Digitalgesetzes',
-      description: 'Problem:\nÖffentliche Verwaltungen geben dreistellige Millionenbeträge für proprietäre Softwarelizenzen und US-Cloud-Abos aus — z. B. Bayern mit rund 360 Millionen Euro an Microsoft (2020–2027) oder die Bundesverwaltung mit Kostensteigerungen von 8,8 Mio. € (2020) auf 18,3 Mio. € (2025). Dies missachtet u. a. das Bayerische Digitalgesetz von 2022, das Behörden bei Neuanschaffungen zur Nutzung von Open Source verpflichtet, sowie den Beschluss der Ministerpräsidentenkonferenz zur föderalen Modernisierungsagenda (Frist: 31. März 2027 für souveräne Alternativen).\n\nVorschlag:\n1. Konsequente Umsetzung des Grundsatzes "Public Money = Public Code" bei allen IT-Neuanschaffungen auf Landes- und Bundesebene.\n2. Einhaltung der gesetzlichen Vorrangregel für Open Source und Verbindlichkeit der Frist zum 31. März 2027.\n3. Beschleunigte Bereitstellung und Nutzung quelloffener Arbeitsplätze (z. B. openDesk / Phoenix) in der Verwaltung.'
+      description: 'Problem:\nÖffentliche Verwaltungen geben dreistellige Millionenbeträge für proprietäre Softwarelizenzen und US-Cloud-Abos aus — z. B. Bayern mit rund 360 Millionen Euro an Microsoft (2020–2027) oder die Bundesverwaltung mit Kostensteigerungen von 8,8 Mio. € (2020) auf 18,3 Mio. € (2025).\n\nVorschlag:\n1. Konsequente Umsetzung von "Public Money = Public Code".'
     },
     { dryRun: !isLive }
   );
