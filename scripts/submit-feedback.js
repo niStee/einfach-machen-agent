@@ -16,8 +16,10 @@ function logSubmission(feedbackData, status, details = {}) {
 
   const logEntry = {
     timestamp: new Date().toISOString(),
+    id: feedbackData.id || 'unknown',
     perspective: feedbackData.perspective,
     topic: feedbackData.topic,
+    title: feedbackData.title || '',
     status: status,
     dryRun: feedbackData.dryRun !== false,
     details: details
@@ -36,15 +38,17 @@ async function submitFeedback(feedbackData = {}) {
   const dryRun = feedbackData.dryRun !== false;
 
   const data = {
+    id: feedbackData.id || 'sample',
     perspective: feedbackData.perspective || 'Privatperson',
     topic: feedbackData.topic || 'Digitalisierung',
+    title: feedbackData.title || '',
     description: feedbackData.description || 'Automatisiertes Bürger-Feedback zur Digitalisierung der Verwaltungsprozesse.',
     authority: feedbackData.authority || 'BMDS',
     plz: feedbackData.plz || '10587',
     dryRun: dryRun
   };
 
-  console.log(`🚀 Starting submission process (dryRun: ${data.dryRun}, headless: ${isHeadless})...`);
+  console.log(`🚀 Starting submission process [${data.id}] (dryRun: ${data.dryRun}, headless: ${isHeadless})...`);
   const browser = await chromium.launch({ 
     headless: isHeadless,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
@@ -117,19 +121,19 @@ async function submitFeedback(feedbackData = {}) {
 
     // Step 4: Review / Submit
     console.log(`📋 Step 4: Final confirmation step reached.`);
-    await page.screenshot({ path: path.join(screenshotsDir, '04_final_review.png'), fullPage: true });
+    await page.screenshot({ path: path.join(screenshotsDir, `${data.id}_04_review.png`), fullPage: true });
 
     if (data.dryRun) {
       console.log('⚠️ DRY RUN ENABLED: Submission verified up to final review step.');
       logSubmission(data, 'SUCCESS_DRY_RUN', { honeypotField });
     } else {
       console.log('🚀 Submitting live form...');
-      const submitButton = page.locator('button[type="submit"]:has-text("Absenden")');
-      if (await submitButton.count() > 0) {
-        await submitButton.click();
+      const submitButtons = page.locator('button[type="submit"], input[type="submit"]');
+      if (await submitButtons.count() > 0) {
+        await submitButtons.last().click();
         await page.waitForLoadState('networkidle');
         console.log('🎉 Form successfully submitted!');
-        await page.screenshot({ path: path.join(screenshotsDir, '05_submission_success.png') });
+        await page.screenshot({ path: path.join(screenshotsDir, `${data.id}_05_success.png`), fullPage: true });
         logSubmission(data, 'SUCCESS_LIVE', { honeypotField });
       }
     }
@@ -164,8 +168,10 @@ async function submitWithRetry(feedbackData, maxRetries = 3) {
 }
 
 const defaultExample = {
+  id: 'sample',
   perspective: 'Privatperson',
   topic: 'Digitalisierung',
+  title: 'Sample Submission',
   description: 'Vorschlag zur Beschleunigung digitaler Verwaltungsanträge durch optimierte Formularprozesse.',
   authority: 'BMDS',
   plz: '10587',
