@@ -80,6 +80,16 @@
     "dryRun": true
   },
   {
+    "id": "09-fahrgastrechte-spnv-api",
+    "perspective": "Privatperson",
+    "topic": "Behördenprozesse",
+    "authority": "Eisenbahn-Bundesamt / BMDV",
+    "plz": "53175",
+    "title": "Verbundübergreifender Open-Data-Standard für digitale Fahrgastrechte",
+    "description": "Erstattungsanträge bei Zugverspätungen und Ausfällen im ÖPNV/SPNV erfordern bei verschiedenen regionalen Verkehrsverbünden unterschiedliche analoge oder proprietäre Formulare. Ein bundesweit einheitlicher, verbundübergreifender Schnittstellen- und Open-Data-Standard zur automatisierten Übermittlung von Verspätungsnachweisen vereinfacht den Prozess für Bürger und entlastet die Kundencenter der Verkehrsbetriebe von manueller Belegprüfung.",
+    "dryRun": true
+  },
+  {
     "id": "10-spendenbescheinigung-digital-api",
     "perspective": "Privatperson",
     "topic": "Behördenprozesse",
