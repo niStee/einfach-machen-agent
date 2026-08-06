@@ -34,5 +34,32 @@
     "authority": "Kommunalverwaltungen / Bundesministerium für Digitales und Verkehr",
     "status": "submitted",
     "submittedAt": "2026-08-06T21:11:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Ehrenamt & Vereinsbürokratie",
+    "title": "Digitale Schnittstelle für Ehrenamt & Vereine (Mein ELSTER ↔ Vereinssoftware)",
+    "description": "Problem:\nEhrenamtliche Vorstände in Sport-, Kultur- und Nachbarschaftsvereinen verbringen Hunderte Stunden pro Jahr mit manueller Mitgliederverwaltung, doppelter Datenerfassung und der Erstellung von Papier-Spendenbescheinigungen fürs Finanzamt. Es fehlt eine digitale Brücke zwischen Vereinssoftware (z. B. Spond, Kadermanager, Vereinsplaner) und der Finanzverwaltung.\n\nVorschlag:\n1. Bereitstellung einer offenen, standardisierten Schnittstelle (API) von Mein ELSTER für Vereinssoftware.\n2. Automatisierte Einreichung von Gemeinnützigkeitsnachweisen und Tätigkeitsberichten.\n3. Elektronische Erstellung und Übermittlung von Spendenbescheinigungen ohne Medienbruch.",
+    "authority": "Bundesfinanzministerium / Landesfinanzministerien",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:14:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Verwaltungsvereinfachung & Sozialleistungen",
+    "title": "Automatische Auszahlung staatlicher Entlastungen ohne Antragstellung",
+    "description": "Problem:\nBei staatlichen Entlastungen, Energiehilfen oder Ausgleichszahlungen (z. B. Klimageld) müssen Bürgerinnen und Bürger bisher komplizierte Anträge ausfüllen, Nachweise hochladen und lange Bearbeitungszeiten abwarten. Dies erzeugt enorme Bürokratie auf Behördenseite und führt dazu, dass bedürftige Menschen Leistungen aus Unkenntnis oder Hürden nicht abrufen.\n\nVorschlag:\n1. Konsequente Nutzung der Steuer-ID / IBAN-Verknüpfung für automatische Auszahlungen ohne Antragstellung.\n2. Automatische Berechnung und Überweisung von Entlastungs- und Pauschalbeträgen direkt an die Bürgerinnen und Bürger.\n3. Entlastung der Sozialverwaltung von manueller Antragsprüfung durch bürokratiearme Automatisierung.",
+    "authority": "Bundesministerium der Finanzen / Bundesministerium für Arbeit und Soziales",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:14:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Transparenz & Informationsfreiheit",
+    "title": "Integration von Informationsfreiheitsanfragen (IFG) in einfach-machen.gov.de",
+    "description": "Problem:\nInformationsfreiheitsanfragen (IFG) an Bundes- und Landesbehörden sind zersplittert, schwer auffindbar und der Bearbeitungsstatus ist für Bürgerinnen und Bürger oft intransparent.\n\nVorschlag:\n1. Integration einer zentralen IFG-Schnittstelle direkt in das Portal einfach-machen.gov.de (analog FragDenStaat / AskTheEU).\n2. Erstellung von Informationsanfragen mit wenigen Klicks und automatischer Zustellung an die zuständige Behörde.\n3. Öffentliche Nachverfolgbarkeit des Bearbeitungsstatus und Veröffentlichung beantworteter Anfragen als Open Data.",
+    "authority": "Bundesbeauftragter für den Datenschutz und die Informationsfreiheit (BfDI) / BMI",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:14:00.000Z"
   }
 ]
