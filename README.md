@@ -2,7 +2,7 @@
 
 Automated API discovery and submission framework for [einfach-machen.gov.de](https://einfach-machen.gov.de/) using Playwright-MCP and Bun.
 
-> **AGENTS.md Compliant**: Built exclusively using Bun, git identity overrides, and structured project paths under `~/Projects/einfach-machen-agent`.
+> **[AGENTS.md](./AGENTS.md) Compliant**: Built exclusively using Bun, git identity overrides, and structured project paths under `~/Projects/einfach-machen-agent`.
 
 ## Features
 
