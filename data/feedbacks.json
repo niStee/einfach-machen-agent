@@ -17,7 +17,7 @@
     "plz": "10557",
     "title": "Public Money, Public Code: Konsequente FOSS-Strategie für Verwaltungssoftware",
     "description": "Öffentlich finanzierte Softwareentwicklung für Behörden und Verwaltungsportale sollte standardmäßig unter Freien und Open-Source-Lizenzen (FOSS) veröffentlicht werden. Dies verhindert Vendor-Lock-ins, ermöglicht unabhängige Sicherheitsaudits durch die Civic-Tech-Community und erlaubt Nachnutzung in Kommunen ohne doppelte Lizenzkosten.",
-    "dryRun": true
+    "dryRun": false
   },
   {
     "id": "03-hackathons-collaboration",
@@ -27,7 +27,7 @@
     "plz": "10587",
     "title": "Regelmäßige Hackathons & Open-Gov-Kooperationen zur Digitalisierung",
     "description": "Verwaltungen sollten regelmäßige Formate und Sandbox-Umgebungen bereitstellen, in denen Entwicklerinnen, Designer und Civic-Tech-Initiativen gemeinsam mit Beamtinnen an der Usability und Digitalisierung von Verwaltungsprozessen arbeiten können. Offene Schnittstellen und Datenmodelle bilden hierfür die Grundlage.",
-    "dryRun": true
+    "dryRun": false
   },
   {
     "id": "04-elster-open-api",
@@ -37,7 +37,7 @@
     "plz": "10117",
     "title": "Moderne REST/JSON-APIs & Open Standards für ELSTER-Schnittstellen",
     "description": "Der Zugang zu ELSTER und steuerlichen Datenübermittlungen beruht historisch auf proprietären Bibliotheken (ERiC). Für eine barrierefreie Integration in moderne, plattformunabhängige Open-Source-Software wird eine offene, gut dokumentierte REST/JSON-Schnittstelle mit modernen Authentifizierungsstandards benötigt.",
-    "dryRun": true
+    "dryRun": false
   },
   {
     "id": "05-bundid-sso",
@@ -47,7 +47,7 @@
     "plz": "10557",
     "title": "Standardisierung & barrierefreie Integration von BundID / Single Sign-On",
     "description": "Das BundID-Konto sollte über offene Standards wie OAuth 2.0 / OpenID Connect (OIDC) nativ in Bürgerdienste integrierbar sein. Die Authentifizierung per Online-Ausweis (eID) muss auf allen gängigen Betriebssystemen ohne proprietäre Hürden und mit klaren Fehlermeldungen funktionieren.",
-    "dryRun": true
+    "dryRun": false
   },
   {
     "id": "06-meta-einfach-machen-api",
@@ -77,7 +77,7 @@
     "plz": "90478",
     "title": "Offene REST/JSON-Schnittstelle für Jobbörse & digitale Förderanträge",
     "description": "Die Schnittstellen der Bundesagentur für Arbeit sind historisch komplex und schwer für moderne Bürger-Tools nutzbar. Eine offene, gut dokumentierte REST/JSON-API mit OAuth/OIDC würde die automatische Übermittlung von Bewerbungsnachweisen, die digitale Abwicklung von Vermittlungsgutscheinen und Weiterbildungsförderungen erheblich vereinfachen.",
-    "dryRun": true
+    "dryRun": false
   },
   {
     "id": "09-fahrgastrechte-spnv-api",
@@ -87,7 +87,7 @@
     "plz": "53175",
     "title": "Verbundübergreifender Open-Data-Standard für digitale Fahrgastrechte",
     "description": "Erstattungsanträge bei Zugverspätungen und Ausfällen im ÖPNV/SPNV erfordern bei verschiedenen regionalen Verkehrsverbünden unterschiedliche analoge oder proprietäre Formulare. Ein bundesweit einheitlicher, verbundübergreifender Schnittstellen- und Open-Data-Standard zur automatisierten Übermittlung von Verspätungsnachweisen vereinfacht den Prozess für Bürger und entlastet die Kundencenter der Verkehrsbetriebe von manueller Belegprüfung.",
-    "dryRun": true
+    "dryRun": false
   },
   {
     "id": "10-spendenbescheinigung-digital-api",
@@ -97,7 +97,7 @@
     "plz": "10117",
     "title": "Automatische digitale Übermittlung von Spendenbescheinigungen",
     "description": "Gemeinnützige Vereine und Spender müssen Zuwendungsbestätigungen bisher manuell ausstellen, archivieren und in Steuererklärungen eintragen. Eine direkte, datenschutzkonforme Schnittstelle zur automatischen Übermittlung an das Finanzamt (Vorausfüllung in ELSTER) baut Bürokratie bei Ehrenamtlichen und Bürgern ab.",
-    "dryRun": true
+    "dryRun": false
   },
   {
     "id": "11-kommunale-buergerantraege-standard",
@@ -107,6 +107,6 @@
     "plz": "10587",
     "title": "Open-Data-Standard für kommunale Ratsinformationssysteme & Bürgeranträge",
     "description": "Bürgeranträge und Kommunalpolitik sind durch inkompatible proprietäre Ratsinformationssysteme stark fragmentiert. Die Einführung eines einheitlichen Open-Data-Standards für Beschlussvorlagen und Bürgeranträge ermöglicht transparente Bürgerbeteiligung und vereinfacht kommunale Verwaltungsprozesse.",
-    "dryRun": true
+    "dryRun": false
   }
 ]
