@@ -1,112 +1,23 @@
 [
   {
-    "id": "01-issue-tracker",
-    "perspective": "Privatperson",
-    "topic": "Digitalisierung",
-    "authority": "BMI / BMDS",
-    "plz": "10557",
-    "title": "Transparenter Issue-Tracker & Bearbeitungsstatus für Bürger-Feedback",
-    "description": "Bürgeranliegen und Vorschläge zum Bürokratieabbau sollten in einem öffentlichen, transparenten Issue-Tracker einsehbar sein (ähnlich Open-Source-Plattformen). Dies vermeidet doppelte Meldungen, stärkt das Vertrauen in die Verwaltung und erlaubt Bürgerinnen und Bürgern, den Bearbeitungsfortschritt und Beschlüsse nachzuvollziehen.",
-    "dryRun": false
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Digitalisierung & Open Source",
+    "title": "Öffentlicher Issue-Tracker und FOSS-Entwicklung für einfach-machen.gov.de",
+    "description": "Das Portal einfach-machen.gov.de erfüllt seinen Zweck als Eingangskanal — hat aber drei strukturelle Lücken:\n\na) Keine Transparenz → Duplicate-Aufwand:\nEs gibt keine öffentliche Übersicht über bereits eingereichte Meldungen. Identische Probleme werden mehrfach gemeldet — das kostet Bürgerinnen und Bürger wie auch die Bearbeitungsseite unnötig Zeit. Ein öffentlicher Issue-Tracker (auf FOSS-Basis wie Forgejo oder GitLab) würde ermöglichen: bekannte Meldungen einsehen, Duplikate vermeiden, Bearbeitungsstatus nachverfolgen (offen/gelöst) und per Upvote Prioritäten signalisieren.\n\nb) Digitale Lösungen als FOSS (Public Money = Public Code):\nEntstehen aus Meldungen konkrete digitale Lösungen, sollten diese als Freie Open-Source-Software veröffentlicht werden. Eine offene Codebasis ermöglicht Community-Beteiligung, Peer-Review und Wiederverwendung durch andere Behörden. Das Prinzip 'Public Money = Public Code' (publiccode.eu) ist in der EU-Open-Source-Strategie verankert.\n\nc) GovTech Hackathons als partizipatives Format:\nAndere Länder machen es vor: Taiwan löst mit dem g0v-Ökosystem staatliche Herausforderungen gemeinsam mit der Zivilgesellschaft. Estland und Finnland haben ähnliche Formate. Deutschland könnte auf Basis der meistgemeldeten Probleme regelmäßige GovTech-Hackathons ausrichten.\n\nZusammenfassung der Bitte:\n1. Öffentlichen, durchsuchbaren Issue-Tracker einführen\n2. Digitale Lösungen unter offener Lizenz veröffentlichen\n3. Pilothackathon auf Basis häufigster Meldungen prüfen",
+    "authority": "Bundesministerium für Digitales und Verkehr / Bundesverwaltung"
   },
   {
-    "id": "02-foss-first",
-    "perspective": "Privatperson",
-    "topic": "Digitalisierung",
-    "authority": "BMI",
-    "plz": "10557",
-    "title": "Public Money, Public Code: Konsequente FOSS-Strategie für Verwaltungssoftware",
-    "description": "Öffentlich finanzierte Softwareentwicklung für Behörden und Verwaltungsportale sollte standardmäßig unter Freien und Open-Source-Lizenzen (FOSS) veröffentlicht werden. Dies verhindert Vendor-Lock-ins, ermöglicht unabhängige Sicherheitsaudits durch die Civic-Tech-Community und erlaubt Nachnutzung in Kommunen ohne doppelte Lizenzkosten.",
-    "dryRun": false
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Finanzverwaltung & ELSTER",
+    "title": "ELSTER: Zentrale, persistente Übersicht über Anträge und Bescheide",
+    "description": "Problem:\nMein ELSTER bietet zwar ein elektronisches Postfach, aber keine vollständige, durchsuchbare Historie eingereichter Anträge und erhaltener Bescheide:\n- Bescheiddaten werden nach 180 Tagen automatisch gelöscht — ein späterer Abruf ist nicht mehr möglich.\n- Bescheide können nur mit der Software abgerufen werden, mit der die Erklärung eingereicht wurde — kein zentraler Zugriff in Mein ELSTER.\n- Über Drittanbieter-Software (WISO, Lexware o. ä.) eingereichte Erklärungen sind im Mein ELSTER-Benutzerkonto nicht einsehbar.\n- Es gibt kein Archiv älterer Bescheide — Bürgerinnen und Bürger müssen sich auf Papierkopien oder Finanzamt-Anfragen verlassen.\n\nVorschlag:\nEin zentrales, persistentes Dokumentenarchiv in Mein ELSTER, das:\n1. Alle über ELSTER-Kanäle eingereichten Anträge und erhaltenen Bescheide chronologisch auflistet\n2. Unabhängig von der verwendeten Einreichungssoftware zugänglich ist\n3. Mindestens 4 Jahre (idealerweise 10 Jahre, analog zur Aufbewahrungspflicht) vorgehalten wird\n4. Maschinell lesbare Exportformate (z. B. PDF/A, XML) anbietet\n\nVorbilder existieren: Das estnische X-Road-Ökosystem und das dänische Borger.dk bieten genau diese zentrale Dokumentenhistorie.",
+    "authority": "Bayerisches Landesamt für Steuern / Bundesfinanzministerium"
   },
   {
-    "id": "03-hackathons-collaboration",
-    "perspective": "Privatperson",
-    "topic": "Digitalisierung",
-    "authority": "BMDS",
-    "plz": "10587",
-    "title": "Regelmäßige Hackathons & Open-Gov-Kooperationen zur Digitalisierung",
-    "description": "Verwaltungen sollten regelmäßige Formate und Sandbox-Umgebungen bereitstellen, in denen Entwicklerinnen, Designer und Civic-Tech-Initiativen gemeinsam mit Beamtinnen an der Usability und Digitalisierung von Verwaltungsprozessen arbeiten können. Offene Schnittstellen und Datenmodelle bilden hierfür die Grundlage.",
-    "dryRun": false
-  },
-  {
-    "id": "04-elster-open-api",
-    "perspective": "Privatperson",
-    "topic": "Behördenprozesse",
-    "authority": "BZSt / Finanzverwaltung",
-    "plz": "10117",
-    "title": "Moderne REST/JSON-APIs & Open Standards für ELSTER-Schnittstellen",
-    "description": "Der Zugang zu ELSTER und steuerlichen Datenübermittlungen beruht historisch auf proprietären Bibliotheken (ERiC). Für eine barrierefreie Integration in moderne, plattformunabhängige Open-Source-Software wird eine offene, gut dokumentierte REST/JSON-Schnittstelle mit modernen Authentifizierungsstandards benötigt.",
-    "dryRun": false
-  },
-  {
-    "id": "05-bundid-sso",
-    "perspective": "Privatperson",
-    "topic": "Digitalisierung",
-    "authority": "BMI",
-    "plz": "10557",
-    "title": "Standardisierung & barrierefreie Integration von BundID / Single Sign-On",
-    "description": "Das BundID-Konto sollte über offene Standards wie OAuth 2.0 / OpenID Connect (OIDC) nativ in Bürgerdienste integrierbar sein. Die Authentifizierung per Online-Ausweis (eID) muss auf allen gängigen Betriebssystemen ohne proprietäre Hürden und mit klaren Fehlermeldungen funktionieren.",
-    "dryRun": false
-  },
-  {
-    "id": "06-meta-einfach-machen-api",
-    "perspective": "Privatperson",
-    "topic": "Digitalisierung",
-    "authority": "BMDS / einfach-machen.gov.de",
-    "plz": "10587",
-    "title": "Meta-Meldung: Maschinenlesbare REST/JSON API für das Meldeportal einführen",
-    "description": "Das Portal einfach-machen.gov.de setzt derzeit auf ein serverseitiges TYPO3 FormFramework mit FormCrShield-Mechanismen. Um automatisierte Einreichungen, Bürger-Werkzeuge und Anbindungen aus der Civic-Tech-Community zu ermöglichen, sollte eine offene, dokumentierte REST/JSON-Schnittstelle (mit Rate-Limiting & API-Keys) bereitgestellt werden.",
-    "dryRun": false
-  },
-  {
-    "id": "07-ai-transparency-standards",
-    "perspective": "Privatperson",
-    "topic": "Digitalisierung",
-    "authority": "BMBF / BMDS",
-    "plz": "10557",
-    "title": "Verbindliche Transparenzstandards für staatlich finanzierte KI-Modelle",
-    "description": "Öffentlich finanzierte KI-Projekte werden häufig als „offen“ oder „souverän“ kommuniziert, obwohl Modellgewichte, Lizenzen, Trainingsdaten-Dokumentation oder reproduzierbare Evaluationen noch nicht allgemein verfügbar sind. Um Vertrauen und Nachnutzbarkeit sicherzustellen, sollte für jedes überwiegend staatlich geförderte KI-Basismodell ein verpflichtendes öffentliches Transparenzblatt eingeführt werden (inkl. Gewichte-Status, Fördersumme, Lizenz, Datenprovenienz, Hardware-Abhängigkeiten und unabhängigen Evaluierungsprotokollen).",
-    "dryRun": false
-  },
-  {
-    "id": "08-arbeitsagentur-open-api",
-    "perspective": "Privatperson",
-    "topic": "Digitalisierung",
-    "authority": "Bundesagentur für Arbeit (BA)",
-    "plz": "90478",
-    "title": "Offene REST/JSON-Schnittstelle für Jobbörse & digitale Förderanträge",
-    "description": "Die Schnittstellen der Bundesagentur für Arbeit sind historisch komplex und schwer für moderne Bürger-Tools nutzbar. Eine offene, gut dokumentierte REST/JSON-API mit OAuth/OIDC würde die automatische Übermittlung von Bewerbungsnachweisen, die digitale Abwicklung von Vermittlungsgutscheinen und Weiterbildungsförderungen erheblich vereinfachen.",
-    "dryRun": false
-  },
-  {
-    "id": "09-fahrgastrechte-spnv-api",
-    "perspective": "Privatperson",
-    "topic": "Behördenprozesse",
-    "authority": "Eisenbahn-Bundesamt / BMDV",
-    "plz": "53175",
-    "title": "Verbundübergreifender Open-Data-Standard für digitale Fahrgastrechte",
-    "description": "Erstattungsanträge bei Zugverspätungen und Ausfällen im ÖPNV/SPNV erfordern bei verschiedenen regionalen Verkehrsverbünden unterschiedliche analoge oder proprietäre Formulare. Ein bundesweit einheitlicher, verbundübergreifender Schnittstellen- und Open-Data-Standard zur automatisierten Übermittlung von Verspätungsnachweisen vereinfacht den Prozess für Bürger und entlastet die Kundencenter der Verkehrsbetriebe von manueller Belegprüfung.",
-    "dryRun": false
-  },
-  {
-    "id": "10-spendenbescheinigung-digital-api",
-    "perspective": "Privatperson",
-    "topic": "Behördenprozesse",
-    "authority": "BZSt / Finanzverwaltung",
-    "plz": "10117",
-    "title": "Automatische digitale Übermittlung von Spendenbescheinigungen",
-    "description": "Gemeinnützige Vereine und Spender müssen Zuwendungsbestätigungen bisher manuell ausstellen, archivieren und in Steuererklärungen eintragen. Eine direkte, datenschutzkonforme Schnittstelle zur automatischen Übermittlung an das Finanzamt (Vorausfüllung in ELSTER) baut Bürokratie bei Ehrenamtlichen und Bürgern ab.",
-    "dryRun": false
-  },
-  {
-    "id": "11-kommunale-buergerantraege-standard",
-    "perspective": "Privatperson",
-    "topic": "Digitalisierung",
-    "authority": "BMDS / Kommunen",
-    "plz": "10587",
-    "title": "Open-Data-Standard für kommunale Ratsinformationssysteme & Bürgeranträge",
-    "description": "Bürgeranträge und Kommunalpolitik sind durch inkompatible proprietäre Ratsinformationssysteme stark fragmentiert. Die Einführung eines einheitlichen Open-Data-Standards für Beschlussvorlagen und Bürgeranträge ermöglicht transparente Bürgerbeteiligung und vereinfacht kommunale Verwaltungsprozesse.",
-    "dryRun": false
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Digitale Souveränität",
+    "title": "Einhaltung von Public Money = Public Code & Ausstieg aus Vendor Lock-in",
+    "description": "Problem:\nÖffentliche Verwaltungen geben dreistellige Millionenbeträge für proprietäre Softwarelizenzen und US-Cloud-Abos aus (z. B. Microsoft 365), während digitale Souveränität und datenschutzkonforme Open-Source-Alternativen vernachlässigt werden. Dies widerspricht dem Beschluss der Ministerpräsidentenkonferenz zur föderalen Modernisierungsagenda (Frist 31. März 2027) sowie den Vorgaben für digitale Souveränität in den Digitalgesetzen der Länder.\n\nVorschlag:\n1. Konsequente Umsetzung von 'Public Money = Public Code' bei allen IT-Neuanschaffungen der öffentlichen Hand.\n2. Bereitstellung und Förderung von Open-Source-Arbeitsplätzen (openDesk / Phoenix) für Behörden und Kommunen.\n3. Transparenter Kostenvergleich zwischen proprietären Cloud-Lizenzen und Open-Source-Eigenbetrieb vor jeder Großbeschaffung.",
+    "authority": "Bundesministerium des Innern / IT-Planungsrat"
   }
 ]
