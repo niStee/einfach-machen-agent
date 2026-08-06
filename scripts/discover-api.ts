@@ -17,13 +17,28 @@ export interface DiscoveryResult {
 }
 
 /**
- * Performs automated deep inspection of TYPO3 FormFramework structures & anti-bot protection on einfach-machen.gov.de
+ * Performs automated deep inspection of TYPO3 FormFramework structures in offscreen minimized browser context.
  */
 export async function discoverApi(): Promise<DiscoveryResult> {
   console.log('🔍 Starting API & Form Discovery on einfach-machen.gov.de...\n');
 
-  const browser: Browser = await chromium.launch({ headless: true });
-  const context: BrowserContext = await browser.newContext();
+  const isHeadless = process.env.HEADLESS === 'true';
+  const browser: Browser = await chromium.launch({
+    headless: isHeadless,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-blink-features=AutomationControlled',
+      '--start-minimized',
+      '--window-position=-32000,-32000',
+      '--window-size=1,1'
+    ]
+  });
+
+  const context: BrowserContext = await browser.newContext({
+    viewport: { width: 1280, height: 900 },
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
+  });
   const page: Page = await context.newPage();
 
   const portalUrl = 'https://einfach-machen.gov.de/meldeformular';
