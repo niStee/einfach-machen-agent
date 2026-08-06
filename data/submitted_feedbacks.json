@@ -25,5 +25,14 @@
     "authority": "Bayerisches Staatsministerium für Digitales / IT-Planungsrat / BMI",
     "status": "submitted",
     "submittedAt": "2026-08-06T21:08:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Kommunale Transparenz & Open Data",
+    "title": "Maschinenlesbare Open Data Standards für ÖPNV- und Kommunalratsdaten",
+    "description": "Problem:\nKommunale Ratsbeschlüsse, Ausschussdokumente und Daten der öffentlichen Verkehrsbetriebe (z. B. Fahrzeugflotten-Ausstattung, Klimatisierung, Auslastung) sind in unübersichtlichen Ratsinformationssystemen als PDFs versteckt. Dies erschwert Bürgerbeteiligung und evidenzbasierte Kommunalpolitik.\n\nVorschlag:\nVerpflichtender Open-Data-Standard (JSON/CSV) für kommunale Beschlüsse, Ratsfragen und ÖPNV-Flottendaten in einem zentralen Open-Data-Portal.",
+    "authority": "Kommunalverwaltungen / Bundesministerium für Digitales und Verkehr",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:11:00.000Z"
   }
 ]
