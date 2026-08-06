@@ -22,7 +22,7 @@ export interface SubmissionResult {
 }
 
 /**
- * Executes feedback submission for einfach-machen.gov.de handling label pointer intercepts cleanly.
+ * Executes feedback submission for einfach-machen.gov.de targeting the exact form submit button.
  */
 export async function submitFeedback(
   payload: FeedbackPayload,
@@ -54,7 +54,7 @@ export async function submitFeedback(
     await page.goto('https://einfach-machen.gov.de/meldeformular', { waitUntil: 'domcontentloaded', timeout: 35000 });
     await page.waitForTimeout(2000);
 
-    // Step 1: Click Privatperson label (handles pointer interception)
+    // Step 1: Click Privatperson label
     const step1Label = await page.$('label[for*="person_art-0"], label.form-check-wrapping-label');
     if (step1Label) {
       await step1Label.click({ force: true });
@@ -75,11 +75,9 @@ export async function submitFeedback(
     console.log('🚀 Live Mode: Navigating multi-step proposal form...');
 
     // Click Step 1 Next
-    const step1Btn = await page.$('button[type="submit"].btn-primary, input[type="submit"]');
-    if (step1Btn) {
-      await step1Btn.click({ force: true });
-      await page.waitForTimeout(2500);
-    }
+    const formSubmitBtn = 'form button[type="submit"]:not(.tx-solr-submit), form input[type="submit"]';
+    await page.click(formSubmitBtn, { force: true });
+    await page.waitForTimeout(2500);
 
     // Step 2: Select Topic Label
     const step2Label = await page.$('label.form-check-wrapping-label');
@@ -88,11 +86,8 @@ export async function submitFeedback(
       console.log('✅ Step 2: Selected topic option label.');
     }
 
-    const step2Btn = await page.$('button[type="submit"].btn-primary, input[type="submit"]');
-    if (step2Btn) {
-      await step2Btn.click({ force: true });
-      await page.waitForTimeout(2500);
-    }
+    await page.click(formSubmitBtn, { force: true });
+    await page.waitForTimeout(2500);
 
     // Step 3: Fill Textarea with Title and Description
     const textarea = await page.$('textarea');
@@ -102,12 +97,9 @@ export async function submitFeedback(
       console.log('✅ Step 3: Textarea filled with proposal text.');
     }
 
-    const submitBtn = await page.$('button[type="submit"].btn-primary, input[type="submit"]');
-    if (submitBtn) {
-      console.log('🚀 Step 3: Submitting proposal...');
-      await submitBtn.click({ force: true });
-      await page.waitForTimeout(3000);
-    }
+    console.log('🚀 Step 3: Submitting proposal...');
+    await page.click(formSubmitBtn, { force: true });
+    await page.waitForTimeout(3000);
 
     await browser.close();
     return {
