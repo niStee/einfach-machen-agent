@@ -80,16 +80,6 @@
     "dryRun": true
   },
   {
-    "id": "09-fahrgastrechte-spnv-api",
-    "perspective": "Privatperson",
-    "topic": "Behördenprozesse",
-    "authority": "Eisenbahn-Bundesamt / Verkehrsverbünde",
-    "plz": "53175",
-    "title": "Einheitlicher digitaler Standard für Fahrgastrechte & Mobilitätsgarantie",
-    "description": "Erstattungsanträge bei Zugverspätungen und Ausfällen im ÖPNV/SPNV erfordern je nach Verkehrsverbund unterschiedliche Formulare oder Papieranträge. Eine einheitliche, verbundübergreifende Schnittstelle zur automatischen Erfassung von Verspätungsnachweisen und Erstattungsansprüchen reduziert den Aufwand für Bürger und Servicezentren.",
-    "dryRun": true
-  },
-  {
     "id": "10-spendenbescheinigung-digital-api",
     "perspective": "Privatperson",
     "topic": "Behördenprozesse",
