@@ -22,7 +22,7 @@ export interface SubmissionResult {
 }
 
 /**
- * Executes feedback submission for einfach-machen.gov.de in minimized offscreen non-headless browser context.
+ * Executes feedback submission for einfach-machen.gov.de handling label pointer intercepts cleanly.
  */
 export async function submitFeedback(
   payload: FeedbackPayload,
@@ -54,6 +54,13 @@ export async function submitFeedback(
     await page.goto('https://einfach-machen.gov.de/meldeformular', { waitUntil: 'domcontentloaded', timeout: 35000 });
     await page.waitForTimeout(2000);
 
+    // Step 1: Click Privatperson label (handles pointer interception)
+    const step1Label = await page.$('label[for*="person_art-0"], label.form-check-wrapping-label');
+    if (step1Label) {
+      await step1Label.click({ force: true });
+      console.log('✅ Step 1: Selected perspective option label.');
+    }
+
     if (isDryRun) {
       console.log('🧪 Dry-Run Mode Active: Navigated to form and validated step 1 accessibility in offscreen browser window.');
       await browser.close();
@@ -65,19 +72,40 @@ export async function submitFeedback(
       };
     }
 
-    console.log('🚀 Live Mode: Filling proposal form fields...');
+    console.log('🚀 Live Mode: Navigating multi-step proposal form...');
 
+    // Click Step 1 Next
+    const step1Btn = await page.$('button[type="submit"].btn-primary, input[type="submit"]');
+    if (step1Btn) {
+      await step1Btn.click({ force: true });
+      await page.waitForTimeout(2500);
+    }
+
+    // Step 2: Select Topic Label
+    const step2Label = await page.$('label.form-check-wrapping-label');
+    if (step2Label) {
+      await step2Label.click({ force: true });
+      console.log('✅ Step 2: Selected topic option label.');
+    }
+
+    const step2Btn = await page.$('button[type="submit"].btn-primary, input[type="submit"]');
+    if (step2Btn) {
+      await step2Btn.click({ force: true });
+      await page.waitForTimeout(2500);
+    }
+
+    // Step 3: Fill Textarea with Title and Description
     const textarea = await page.$('textarea');
     if (textarea) {
       const fullText = `${payload.title ? `Titel: ${payload.title}\n\n` : ''}${payload.description}`;
       await textarea.fill(fullText);
-      console.log('✅ Textarea filled with proposal text.');
+      console.log('✅ Step 3: Textarea filled with proposal text.');
     }
 
-    const nextBtn = await page.$('form button[type="submit"], form input[type="submit"], button.btn-primary');
-    if (nextBtn) {
-      console.log('🚀 Submitting form...');
-      await nextBtn.click();
+    const submitBtn = await page.$('button[type="submit"].btn-primary, input[type="submit"]');
+    if (submitBtn) {
+      console.log('🚀 Step 3: Submitting proposal...');
+      await submitBtn.click({ force: true });
       await page.waitForTimeout(3000);
     }
 
@@ -104,7 +132,7 @@ if (import.meta.main) {
   submitFeedback(
     {
       title: 'Digitale Souveränität: Ausstieg aus MS365 Lock-in & Einhaltung des Digitalgesetzes',
-      description: 'Problem:\nÖffentliche Verwaltungen geben dreistellige Millionenbeträge für proprietäre Softwarelizenzen und US-Cloud-Abos aus — z. B. Bayern mit rund 360 Millionen Euro an Microsoft (2020–2027) oder die Bundesverwaltung mit Kostensteigerungen von 8,8 Mio. € (2020) auf 18,3 Mio. € (2025).\n\nVorschlag:\n1. Konsequente Umsetzung von "Public Money = Public Code".'
+      description: 'Problem:\nÖffentliche Verwaltungen geben dreistellige Millionenbeträge für proprietäre Softwarelizenzen aus.\n\nVorschlag:\n1. Konsequente Umsetzung von "Public Money = Public Code".'
     },
     { dryRun: !isLive }
   );
