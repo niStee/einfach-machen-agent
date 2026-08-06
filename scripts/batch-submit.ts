@@ -10,9 +10,9 @@ export interface BatchSummary {
 }
 
 /**
- * Batch submits feedback proposals with rate limiting and exponential backoff protection.
+ * Batch submits feedback proposals from data/feedbacks.json.
  */
-export async function batchSubmit(): Promise<BatchSummary> {
+export async function batchSubmit(dryRun: boolean = true): Promise<BatchSummary> {
   const dataPath = path.join(__dirname, '../data/feedbacks.json');
   if (!fs.existsSync(dataPath)) {
     console.error('❌ Data file not found: data/feedbacks.json');
@@ -20,7 +20,7 @@ export async function batchSubmit(): Promise<BatchSummary> {
   }
 
   const proposals: FeedbackPayload[] = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
-  console.log(`📦 Starting Batch Processing for ${proposals.length} proposals...\n`);
+  console.log(`📦 Starting Batch Processing for ${proposals.length} proposals (dryRun: ${dryRun})...\n`);
 
   const results: SubmissionResult[] = [];
   let successful = 0;
@@ -28,9 +28,9 @@ export async function batchSubmit(): Promise<BatchSummary> {
 
   for (let i = 0; i < proposals.length; i++) {
     const item = proposals[i];
-    console.log(`[${i + 1}/${proposals.length}] Processing proposal: "${item.description.slice(0, 40)}..."`);
+    console.log(`[${i + 1}/${proposals.length}] Processing proposal: "${(item.title || item.description).slice(0, 50)}..."`);
 
-    const result = await submitFeedback(item, { dryRun: true });
+    const result = await submitFeedback(item, { dryRun });
     results.push(result);
 
     if (result.success) {
@@ -50,5 +50,6 @@ export async function batchSubmit(): Promise<BatchSummary> {
 }
 
 if (import.meta.main) {
-  batchSubmit();
+  const isLive = process.argv.includes('--live');
+  batchSubmit(!isLive);
 }
