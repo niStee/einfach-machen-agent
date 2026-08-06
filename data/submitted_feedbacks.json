@@ -151,5 +151,41 @@
     "authority": "Bundesministerium für Umwelt, Naturschutz, nukleare Sicherheit und Verbraucherschutz / BMBF",
     "status": "submitted",
     "submittedAt": "2026-08-06T21:31:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Arbeitsverwaltung & Arbeitsmarkt",
+    "title": "Offene Schnittstelle (API) der Bundesagentur für Arbeit für Ausbildungs- und Stellenangebote",
+    "description": "Problem:\nDas Jobportal der Bundesagentur für Arbeit ist abgeschottet und bietet keine modernen, offenen Schnittstellen für zivilgesellschaftliche Job-Tools oder automatisiertes Talent-Matching im öffentlichen Dienst.\n\nVorschlag:\nOffene REST/GraphQL-API der Bundesagentur für Arbeit für Stellen- und Ausbildungsangebote zur schnellen, unbürokratischen Jobvermittlung.",
+    "authority": "Bundesagentur für Arbeit / Bundesministerium für Arbeit und Soziales",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:45:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Transparenz & Subventionskontrolle",
+    "title": "Öffentliche Transparenzdatenbank für Subventionen und Fördermittel",
+    "description": "Problem:\nStaatliche Subventionen und Fördermittel an Unternehmen, Verbände und Großprojekte sind unübersichtlich in verstreuten Papierberichten (z. B. Subventionsbericht des Bundes) verteilt. Bürgerinnen und Bürger können Empfänger, Zweck und Förderhöhe nicht transparent nachvollziehen.\n\nVorschlag:\n1. Bereitstellung einer zentralen, öffentlich durchsuchbaren Open-Data-Datenbank aller vergebenen Subventionen und Fördermittel des Bundes und der Länder.\n2. Angabe von Empfänger, Förderzweck, Höhe und regelmäßige Veröffentlichung von Wirksamkeitsüberprüfungen.",
+    "authority": "Bundesministerium der Finanzen / Bundesministerium für Wirtschaft und Klimaschutz",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:47:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Vereinsrecht & Registermodernisierung",
+    "title": "Digitales Vereinsregister ohne Notarzwang bei einfachen Satzungsänderungen",
+    "description": "Problem:\nVorstands- und Satzungsänderungen bei ehrenamtlich geführten gemeinnützigen Vereinen dauern bei Amtsgerichten oft Monate und verlangen kostenpflichtige, analoge Notarbeglaubigungen.\n\nVorschlag:\n1. Voll-digitale Einreichung von Vereinsregister-Änderungen über die BundID für ehrenamtliche Vorstände.\n2. Befreiung von der Notarbeglaubigungspflicht bei einfachen, standardisierten Satzungsanpassungen und Vorstandswahlen.",
+    "authority": "Bundesministerium der Justiz / Landesjustizministerien",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:47:00.000Z"
+  },
+  {
+    "perspective": "Bürgerin / Bürger",
+    "topic": "Kommunale Infrastruktur & Mängelmelder",
+    "title": "Einheitlicher Open-Mängelmelder-Standard für Städte und Gemeinden",
+    "description": "Problem:\nDefekte Straßenbeleuchtungen, Schlaglöcher, beschädigte Spielgeräte oder illegale Müllentsorgung müssen in jeder Gemeinde über unterschiedliche Kanäle, Apps oder Papierformulare gemeldet werden.\n\nVorschlag:\n1. Verpflichtender, einheitlicher Open-Mängelmelder-Standard in einfach-machen.gov.de für alle deutschen Kommunen.\n2. Öffentliche Statusnachverfolgung und Kartenansicht gemeldeter Infrastrukturprobleme.",
+    "authority": "Kommunalverwaltungen / Bundesministerium für Wohnen, Stadtentwicklung und Bauwesen",
+    "status": "submitted",
+    "submittedAt": "2026-08-06T21:47:00.000Z"
   }
 ]
