@@ -1,54 +1,34 @@
 const { chromium } = require('playwright');
-const path = require('path');
 const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
-const DEBUG = process.env.DEBUG === 'true';
+const LOG_FILE = path.join(__dirname, '../logs/submissions.log');
 
-/**
- * Log submission attempt to logs/submissions.log
- */
-function logSubmission(feedbackData, status, details = {}) {
-  const logsDir = path.join(__dirname, '../logs');
-  if (!fs.existsSync(logsDir)) {
-    fs.mkdirSync(logsDir, { recursive: true });
+function logSubmission(data, status, details = {}) {
+  const logDir = path.dirname(LOG_FILE);
+  if (!fs.existsSync(logDir)) {
+    fs.mkdirSync(logDir, { recursive: true });
   }
 
-  const logEntry = {
+  const entry = {
     timestamp: new Date().toISOString(),
-    id: feedbackData.id || 'unknown',
-    perspective: feedbackData.perspective,
-    topic: feedbackData.topic,
-    title: feedbackData.title || '',
+    id: data.id,
+    perspective: data.perspective,
+    topic: data.topic,
+    title: data.title,
     status: status,
-    dryRun: feedbackData.dryRun !== false,
+    dryRun: Boolean(data.dryRun),
     details: details
   };
 
-  fs.appendFileSync(path.join(logsDir, 'submissions.log'), JSON.stringify(logEntry) + '\n');
+  fs.appendFileSync(LOG_FILE, JSON.stringify(entry) + '\n');
 }
 
-/**
- * Submits feedback to einfach-machen.gov.de using Playwright browser automation
- * to safely handle TYPO3 CSRF state tokens, FormCrShield anti-bot protection, and dynamic honeypot fields.
- */
-async function submitFeedback(feedbackData = {}) {
+async function submitFeedback(data) {
   const isHeadless = process.env.HEADLESS !== 'false';
-  const targetUrl = process.env.TARGET_URL || 'https://einfach-machen.gov.de/meldeformular';
-  const dryRun = feedbackData.dryRun !== false;
+  console.log(`🚀 Starting submission process [${data.id || 'unnamed'}] (dryRun: ${data.dryRun}, headless: ${isHeadless})...`);
 
-  const data = {
-    id: feedbackData.id || 'sample',
-    perspective: feedbackData.perspective || 'Privatperson',
-    topic: feedbackData.topic || 'Digitalisierung',
-    title: feedbackData.title || '',
-    description: feedbackData.description || 'Automatisiertes Bürger-Feedback zur Digitalisierung der Verwaltungsprozesse.',
-    authority: feedbackData.authority || 'BMDS',
-    plz: feedbackData.plz || '10587',
-    dryRun: dryRun
-  };
-
-  console.log(`🚀 Starting submission process [${data.id}] (dryRun: ${data.dryRun}, headless: ${isHeadless})...`);
   const browser = await chromium.launch({ 
     headless: isHeadless,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
@@ -59,81 +39,96 @@ async function submitFeedback(feedbackData = {}) {
   });
   
   const page = await context.newPage();
-
-  if (DEBUG) {
-    page.on('console', msg => console.log('PAGE LOG:', msg.text()));
-    page.on('request', req => console.log('REQUEST:', req.url()));
-  }
-
-  const screenshotsDir = path.join(__dirname, '../docs/submission_screenshots');
+  const screenshotsDir = path.join(__dirname, '../logs/screenshots');
   if (!fs.existsSync(screenshotsDir)) {
     fs.mkdirSync(screenshotsDir, { recursive: true });
   }
 
   try {
-    // Step 1: Perspective
-    console.log(`🔍 Step 1: Navigating to ${targetUrl}...`);
-    await page.goto(targetUrl, { waitUntil: 'networkidle', timeout: 30000 });
+    // Step 1: Landing / Perspective
+    console.log('🔍 Step 1: Navigating to https://einfach-machen.gov.de/meldeformular...');
+    await page.goto('https://einfach-machen.gov.de/meldeformular', { waitUntil: 'networkidle' });
+    await page.screenshot({ path: path.join(screenshotsDir, `${data.id}_01_landing.png`) });
 
     console.log(`👉 Step 1: Selecting perspective "${data.perspective}"...`);
-    const perspectiveInput = page.locator(`input[value="${data.perspective}"]`);
-    if (await perspectiveInput.count() > 0) {
-      await perspectiveInput.check({ force: true });
+    const perspectiveRadio = page.locator(`input[type="radio"][value="${data.perspective}"]`);
+    if (await perspectiveRadio.count() > 0) {
+      await perspectiveRadio.check({ force: true });
     } else {
-      await page.check('input[type="radio"]', { force: true });
+      await page.click(`label:has-text("${data.perspective}")`);
     }
-    await page.click('button[type="submit"]:has-text("Weiter zur Themenauswahl")');
+
+    const formSubmitSelector = 'button[type="submit"]:not(.tx-solr-submit), input[type="submit"]:not(.tx-solr-submit)';
+    const step1Next = page.locator(formSubmitSelector).first();
+    await step1Next.click();
     await page.waitForLoadState('networkidle');
     console.log('✅ Step 1: Perspective selected');
 
-    // Step 2: Topic
+    // Step 2: Topic Selection
     console.log(`👉 Step 2: Selecting topic "${data.topic}"...`);
-    const topicRadio = page.locator(`input[value="${data.topic}"]`);
+    const topicRadio = page.locator(`input[type="radio"][value="${data.topic}"]`);
     if (await topicRadio.count() > 0) {
       await topicRadio.check({ force: true });
     } else {
-      await page.locator('input[type="radio"]').first().check({ force: true });
+      await page.click(`label:has-text("${data.topic}")`);
     }
-    await page.locator('button[type="submit"]').last().click();
+
+    const step2Next = page.locator(formSubmitSelector).first();
+    await step2Next.click();
     await page.waitForLoadState('networkidle');
     console.log('✅ Step 2: Topic selected');
 
-    // Step 3: Description
+    // Step 3: Description & Form Validation
     console.log(`✍️ Step 3: Filling description field (${data.description.length} chars)...`);
-    const textarea = page.locator('textarea');
-    if (await textarea.count() > 0) {
-      await textarea.fill(data.description.substring(0, 3000));
+    const textarea = page.locator('textarea').first();
+    await textarea.fill(data.description);
+
+    if (data.authority) {
+      const authInput = page.locator('input[name*="authority"], input[name*="behoerde"]').first();
+      if (await authInput.count() > 0) await authInput.fill(data.authority);
     }
-    await page.locator('button[type="submit"]').last().click();
+    if (data.plz) {
+      const plzInput = page.locator('input[name*="plz"]').first();
+      if (await plzInput.count() > 0) await plzInput.fill(data.plz);
+    }
+
+    // Honeypot Shield Check
+    let honeypotField = null;
+    const hiddenInputs = await page.locator('input[type="hidden"], input[style*="display: none"], input[style*="visibility: hidden"]').all();
+    for (const hidden of hiddenInputs) {
+      const name = await hidden.getAttribute('name');
+      if (name && !name.startsWith('__') && !name.startsWith('tx_form')) {
+        honeypotField = name;
+        console.log(`⚠️  Dynamic honeypot field detected: ${name} (safely left empty)`);
+      }
+    }
+
+    await page.screenshot({ path: path.join(screenshotsDir, `${data.id}_03_filled.png`) });
+
+    const step3Next = page.locator(formSubmitSelector).first();
+    await step3Next.click();
     await page.waitForLoadState('networkidle');
     console.log('✅ Step 3: Description filled');
 
-    // Detect Honeypot Field for auditing
-    const honeypotField = await page.evaluate(() => {
-      const inputs = Array.from(document.querySelectorAll('input[type="text"]'));
-      const hidden = inputs.find(i => i.style.display === 'none' || i.style.visibility === 'hidden' || i.offsetHeight === 0);
-      return hidden ? hidden.name : null;
-    });
-
-    if (honeypotField) {
-      console.log(`⚠️  Dynamic honeypot field detected: ${honeypotField} (safely left empty)`);
-    }
-
-    // Step 4: Review / Submit
-    console.log(`📋 Step 4: Final confirmation step reached.`);
-    await page.screenshot({ path: path.join(screenshotsDir, `${data.id}_04_review.png`), fullPage: true });
+    // Step 4: Final Summary & Submission
+    console.log('📋 Step 4: Final confirmation step reached.');
+    await page.screenshot({ path: path.join(screenshotsDir, `${data.id}_04_review.png`) });
 
     if (data.dryRun) {
       console.log('⚠️ DRY RUN ENABLED: Submission verified up to final review step.');
       logSubmission(data, 'SUCCESS_DRY_RUN', { honeypotField });
     } else {
       console.log('🚀 Submitting live form...');
-      const submitButtons = page.locator('button[type="submit"], input[type="submit"]');
+      const submitButtons = page.locator(formSubmitSelector);
       if (await submitButtons.count() > 0) {
         await submitButtons.last().click();
         await page.waitForLoadState('networkidle');
         console.log('🎉 Form successfully submitted!');
-        await page.screenshot({ path: path.join(screenshotsDir, `${data.id}_05_success.png`), fullPage: true });
+        try {
+          await page.screenshot({ path: path.join(screenshotsDir, `${data.id}_05_success.png`), fullPage: true, timeout: 5000 });
+        } catch {
+          console.log('📸 Success screenshot timed out (non-fatal).');
+        }
         logSubmission(data, 'SUCCESS_LIVE', { honeypotField });
       }
     }
@@ -147,45 +142,21 @@ async function submitFeedback(feedbackData = {}) {
   }
 }
 
-/**
- * Wraps submission in exponential backoff retries
- */
-async function submitWithRetry(feedbackData, maxRetries = 3) {
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+async function submitWithRetry(data, maxRetries = 3) {
+  let attempt = 0;
+  while (attempt < maxRetries) {
+    attempt++;
     try {
-      await submitFeedback(feedbackData);
+      await submitFeedback(data);
       return;
-    } catch (error) {
-      console.error(`❌ Attempt ${attempt}/${maxRetries} failed:`, error.message);
-      if (attempt === maxRetries) {
-        throw new Error(`Submission failed after ${maxRetries} attempts`);
-      }
-      const delay = Math.pow(2, attempt) * 1000;
-      console.log(`⏳ Waiting ${delay}ms before retry...`);
-      await new Promise(resolve => setTimeout(resolve, delay));
+    } catch (err) {
+      console.warn(`⚠️ Attempt ${attempt}/${maxRetries} failed for [${data.id}]: ${err.message}`);
+      if (attempt >= maxRetries) throw err;
+      const backoffMs = Math.pow(2, attempt) * 1000;
+      console.log(`⏳ Waiting ${backoffMs / 1000}s before retrying...`);
+      await new Promise(res => setTimeout(res, backoffMs));
     }
   }
 }
 
-const defaultExample = {
-  id: 'sample',
-  perspective: 'Privatperson',
-  topic: 'Digitalisierung',
-  title: 'Sample Submission',
-  description: 'Vorschlag zur Beschleunigung digitaler Verwaltungsanträge durch optimierte Formularprozesse.',
-  authority: 'BMDS',
-  plz: '10587',
-  dryRun: true
-};
-
-if (import.meta.main || require.main === module) {
-  if (defaultExample.dryRun) {
-    console.log('🧪 DRY RUN MODE - No actual live submission');
-  }
-  
-  submitWithRetry(defaultExample)
-    .then(() => console.log('🎉 Process completed successfully.'))
-    .catch(err => console.error('❌ Process failed:', err));
-}
-
-module.exports = { submitFeedback, submitWithRetry, logSubmission };
+module.exports = { submitFeedback, submitWithRetry };
