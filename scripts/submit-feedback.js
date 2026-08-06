@@ -58,7 +58,7 @@ async function submitFeedback(data) {
       await page.click(`label:has-text("${data.perspective}")`);
     }
 
-    const formSubmitSelector = 'button[type="submit"]:not(.tx-solr-submit), input[type="submit"]:not(.tx-solr-submit)';
+    const formSubmitSelector = 'form button[type="submit"]:not(.tx-solr-submit), form input[type="submit"]:not(.tx-solr-submit)';
     const step1Next = page.locator(formSubmitSelector).first();
     await step1Next.click();
     await page.waitForLoadState('networkidle');
