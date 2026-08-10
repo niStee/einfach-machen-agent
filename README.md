@@ -1,5 +1,7 @@
 # EinfachMachen Agent
 
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/niStee/einfach-machen-agent/badge)](https://scorecard.dev/viewer/?uri=github.com/niStee/einfach-machen-agent)
+
 Automated API discovery and submission framework for [einfach-machen.gov.de](https://einfach-machen.gov.de/) using Playwright-MCP and Bun.
 
 > **[AGENTS.md](./AGENTS.md) Compliant**: Built exclusively using Bun, git identity overrides, and structured project paths under `~/Projects/einfach-machen-agent`.
