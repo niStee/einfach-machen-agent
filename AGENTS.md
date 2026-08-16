@@ -3,6 +3,8 @@
 Automated API discovery and submission agent for `einfach-machen.gov.de` using Playwright-MCP and Bun.
 
 > Parent: [~/Projects/AGENTS.md](../AGENTS.md) — environment-wide project index.
+> Primary Repo: `niStee/einfach-machen-agent` on GitHub (private) · EU Mirror: `niStee/einfach-machen-agent` on Codeberg (private)
+> License: GNU General Public License v3.0 (GPL-3.0) · [SECURITY.md](file:///home/nils/Projects/einfach-machen-agent/SECURITY.md)
 
 ## Overview
 
