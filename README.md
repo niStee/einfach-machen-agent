@@ -1,6 +1,15 @@
 # EinfachMachen Agent
 
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/niStee/einfach-machen-agent/badge)](https://scorecard.dev/viewer/?uri=github.com/niStee/einfach-machen-agent)
+<p align="left">
+  <a href="https://github.com/niStee/einfach-machen-agent/releases"><img src="https://img.shields.io/github/v/release/niStee/einfach-machen-agent?style=flat&logo=github&color=blue" alt="Latest Release"></a>
+  <a href="https://github.com/niStee/einfach-machen-agent/actions/workflows/ci.yml"><img src="https://github.com/niStee/einfach-machen-agent/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI Pipeline"></a>
+  <a href="https://scorecard.dev/viewer/?uri=github.com/niStee/einfach-machen-agent"><img src="https://api.scorecard.dev/projects/github.com/niStee/einfach-machen-agent/badge" alt="OpenSSF Scorecard"></a>
+  <a href="https://github.com/niStee/einfach-machen-agent/actions/workflows/codeql.yml"><img src="https://github.com/niStee/einfach-machen-agent/actions/workflows/codeql.yml/badge.svg?branch=main" alt="CodeQL SAST"></a>
+  <a href="https://bun.sh"><img src="https://img.shields.io/badge/Runtime-Bun%20v1.3+-fbf0df?style=flat&logo=bun&logoColor=black" alt="Bun Runtime"></a>
+  <a href="https://modelcontextprotocol.io/"><img src="https://img.shields.io/badge/Protocol-MCP-4B32C3?style=flat&logo=anthropic&logoColor=white" alt="Model Context Protocol"></a>
+  <a href="https://codeberg.org/niStee/einfach-machen-agent"><img src="https://img.shields.io/badge/Mirror-Codeberg-2185d0?style=flat&logo=codeberg&logoColor=white" alt="Codeberg Mirror"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-blue.svg?style=flat" alt="License: GPL-3.0"></a>
+</p>
 
 Automated API discovery and submission framework for [einfach-machen.gov.de](https://einfach-machen.gov.de/) using Playwright-MCP and Bun.
 
