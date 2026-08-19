@@ -1,6 +1,6 @@
 {
   "name": "einfach-machen-agent",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Automated API discovery and submission for einfach-machen.gov.de using Playwright-MCP, Bun, and TypeScript",
   "main": "scripts/discover-api.ts",
   "scripts": {
