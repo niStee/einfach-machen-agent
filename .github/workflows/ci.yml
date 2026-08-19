@@ -25,7 +25,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup Bun
-        uses: oven-sh/setup-bun@4bc314a1c5d33f0633b49cfa3ebf618a36ff694b # v2.0.1
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.0.1
         with:
           bun-version: latest
 
@@ -56,6 +56,6 @@ jobs:
           persist-credentials: false
 
       - name: Gitleaks Secret Detection
-        uses: gitleaks/gitleaks-action@789c6665792ef8806297ce20387532a1eb5fae6d # v2.3.8
+        uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
