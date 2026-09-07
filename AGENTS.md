@@ -27,3 +27,10 @@ Automated API discovery and submission agent for `einfach-machen.gov.de` using P
 3. **Dry-Run Protection**: Scripts must default to `dryRun: true` during development.
 4. **Git Identity**: Ensure repository-specific git identity overrides are configured (`user.name "niStee"`).
 5. **No Direct Main Pushes**: Always use feature branches (`feat/...`, `fix/...`) and Pull Requests.
+
+## Repository topology
+- canonical: GitHub (niStee/einfach-machen-agent) — all changes land via PR to main
+- mirror: Codeberg (codeberg.org/niStee/einfach-machen-agent) — automated push mirror via
+  .github/workflows/mirror-codeberg.yml; receives main + tags only
+- never push directly to main; never push to Codeberg directly
+- mirror repair path: re-run the workflow (workflow_dispatch), not local pushes
