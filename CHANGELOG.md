@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/niStee/einfach-machen-agent/compare/einfach-machen-agent-v1.1.0...einfach-machen-agent-v1.1.1) (2026-09-08)
+
+
+### Bug Fixes
+
+* **ci:** update gitleaks-action to v3 for Node 24 compatibility ([#51](https://github.com/niStee/einfach-machen-agent/issues/51)) ([7ea2a7d](https://github.com/niStee/einfach-machen-agent/commit/7ea2a7d7fe44c4d1f213b08d519821990c5bdb6c))
+
 ## [1.1.0](https://github.com/niStee/einfach-machen-agent/compare/einfach-machen-agent-v1.0.0...einfach-machen-agent-v1.1.0) (2026-08-19)
 
 
