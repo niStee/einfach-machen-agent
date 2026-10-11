@@ -3,9 +3,6 @@ import { chromium, Browser, BrowserContext, Page } from 'playwright';
 import fs from 'fs';
 import path from 'path';
 
-export const LOGS_DIR = path.resolve(__dirname, '..', 'logs');
-export const AUDIT_LOG_FILE = path.resolve(LOGS_DIR, 'dma-submissions.json');
-
 export interface DmaComplaintPayload {
   firstName: string;
   lastName: string;
@@ -143,8 +140,8 @@ export async function submitDmaComplaint(
     await page.waitForTimeout(2000);
 
     // Ensure logs directory exists
-    if (!fs.existsSync(LOGS_DIR)) {
-      fs.mkdirSync(LOGS_DIR, { recursive: true });
+    if (!fs.existsSync('logs')) {
+      fs.mkdirSync('logs', { recursive: true });
     }
 
     // 1. Fill First Name
@@ -213,7 +210,7 @@ export async function submitDmaComplaint(
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 
     if (isDryRun) {
-      const screenshotPath = path.resolve(LOGS_DIR, `dma-dryrun-${timestamp}.png`);
+      const screenshotPath = path.join('logs', `dma-dryrun-${timestamp}.png`);
       await page.screenshot({ path: screenshotPath, fullPage: true });
       console.log(`🧪 Dry-Run Mode Active: Form verified and filled successfully without submitting.`);
       console.log(`📸 Audit screenshot saved: ${screenshotPath}`);
@@ -238,30 +235,10 @@ export async function submitDmaComplaint(
     await submitBtn.click({ force: true });
     await page.waitForTimeout(5000);
 
-    const liveScreenshot = path.resolve(LOGS_DIR, `dma-submission-${timestamp}.png`);
+    const liveScreenshot = path.join('logs', `dma-submission-${timestamp}.png`);
     await page.screenshot({ path: liveScreenshot, fullPage: true });
 
-    // Record submission to audit log
-    const record = {
-      timestamp: new Date().toISOString(),
-      topic: payload.topic,
-      subject: payload.subject,
-      email: payload.email,
-      screenshot: liveScreenshot
-    };
-
-    let history = [];
-    if (fs.existsSync(AUDIT_LOG_FILE)) {
-      try {
-        history = JSON.parse(fs.readFileSync(AUDIT_LOG_FILE, 'utf8'));
-      } catch {
-        history = [];
-      }
-    }
-    history.push(record);
-    fs.writeFileSync(AUDIT_LOG_FILE, JSON.stringify(history, null, 2));
-
-    console.log('🎉 DMA Complaint successfully submitted and audited!');
+    console.log('🎉 DMA Complaint successfully submitted!');
     await browser.close();
 
     return {
