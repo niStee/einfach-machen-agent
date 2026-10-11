@@ -19,3 +19,6 @@ It relies on Playwright Chromium using standard offscreening flags matching `sub
 - Message: `textarea[name="message[0][value]"]`, `#edit-message-0-value` (max 2000 chars)
 - Privacy policy: `input[name="privacy_policy"]`, `#edit-privacy-policy` (checkbox)
 - Submit: `input[type="submit"][id*="edit-submit"]`, `button[type="submit"]`
+
+## Identity & Contact Strategy
+Refer to [`docs/adr/ADR-001-civic-contact-identity-and-email-relay-strategy.md`](../../docs/adr/ADR-001-civic-contact-identity-and-email-relay-strategy.md) for the evaluation of Custom Subdomain Relay vs. Random Pseudonymous Relay Pools.
