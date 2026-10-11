@@ -46,7 +46,14 @@ Automated API discovery and submission framework for [einfach-machen.gov.de](htt
    bun run submit
    ```
 
-5. **Run Batch Submissions**:
+5. **Test DMA Citizen Complaint Submission (Dry-Run Mode)**:
+   ```bash
+   bun run submit:dma
+   # For live submission:
+   bun run submit:dma --live
+   ```
+
+6. **Run Batch Submissions**:
    ```bash
    bun run batch
    ```

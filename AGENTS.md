@@ -17,6 +17,7 @@ Automated API discovery and submission agent for `einfach-machen.gov.de` using P
 | **Start MCP Server** | `bun run start-mcp` | Starts Playwright MCP Server on port 3550 |
 | **Discover API** | `bun run discover` | Scans TYPO3 FormFramework structure & anti-bot tokens |
 | **Submit Feedback** | `bun run submit` | Runs single feedback proposal submission (`dryRun` mode) |
+| **Submit DMA Complaint** | `bun run submit:dma` | Submits EU Citizen Digital Markets Act complaint (`dryRun` default, `--live` for submission) |
 | **Batch Process** | `bun run batch` | Runs rate-limited batch submission engine |
 | **Run Tests** | `bun test` | Runs Bun test pyramid & MCP contract tests |
 
