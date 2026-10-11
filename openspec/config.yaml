@@ -1,0 +1,20 @@
+schema: spec-driven
+
+# Spec-driven development for einfach-machen-agent (2026-10-11), following the
+# bahn, plain-language-checks, and android pilots. The method decision is recorded
+# environment-wide in ai-infra (ADR-021).
+context: |
+  Order of work: spec delta first, then failing tests derived from its scenarios,
+  then the code. A spec never replaces tests.
+  Every guard or regression test ships as a positive/negative pair and is only
+  trusted after a recorded sensitivity probe: weaken the guard, see the test fail,
+  restore it (ai-infra ADR-012).
+  A change proposal is needed for behavior changes (features, interfaces,
+  workflows, user-visible config). A bug fix that restores already specified
+  behavior needs a regression test, not a proposal, unless the bug is complex or
+  in a critical path; then use current / expected / unchanged behavior. Refactors,
+  renames and typos need neither.
+  Decisions with lasting architectural impact go to docs/adr/ as an ADR that
+  outlives the archived change; the proposal links it.
+  Civic submission public promise: dryRun by default; zero live mutations without
+  explicit --live flag; audit logs and screenshots archived under logs/.
