@@ -227,11 +227,12 @@ export async function submitDmaComplaint(
 
     // Live Mode: Click Submit
     console.log('🚀 Live Mode: Submitting form to European Commission DMA team...');
-    const submitBtn = await page.$('input[type="submit"][id*="edit-submit"], button[type="submit"]');
+    const submitBtn = await page.$('#edit-submit, button[name="op"][value="Send message"], form.contact-message-feedback-form button[type="submit"]');
     if (!submitBtn) {
       throw new Error('Submit button not found on page');
     }
 
+    await submitBtn.scrollIntoViewIfNeeded();
     await submitBtn.click({ force: true });
     try {
       await page.waitForLoadState('networkidle', { timeout: 15000 });
