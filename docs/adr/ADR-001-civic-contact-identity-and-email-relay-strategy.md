@@ -1,30 +1,37 @@
-# ADR-001: Civic Contact Identity and Email Relay Strategy
+# ADR-001: Civic Contact Identity, Email Relay, and Anti-Spam Strategy
 
 - **Status**: Proposed
 - **Date**: 2026-10-11
-- **Context**: Automated civic participation and complaint filing (einfach-machen.gov.de, EU Digital Markets Act portal)
+- **Governing Standard**: `ai-infra` ADR-023 (Civic contact identity, email relay, and public endpoint anti-spam governance)
+- **Context**: Automated civic participation and regulatory complaint filing (`einfach-machen.gov.de`, European Commission Digital Markets Act portal)
+- **Standards**: RFC 9110 (HTTP Semantics, 2022), RFC 9309 (Robots Exclusion, 2022),
+  RFC 8617 (ARC Protocol, 2019), RFC 7489 (DMARC, 2015 / DMARCbis 2026),
+  RFC 5322 (Internet Message Format, 2008), OWASP OAT-014 / OAT-015 (Automated Threats, 2026)
 
 ---
 
 ## Context and Problem Statement
 
-Automated civic engagement agents submit inquiries, proposals, and regulatory complaints to public authorities and institutional portals (e.g. European Commission DMA Citizen Portal, TYPO3 FormFramework). These portals mandate a verified email address to acknowledge receipt and return formal case numbers or follow-ups.
+Automated civic engagement agents submit inquiries, proposals, and regulatory complaints to public authorities and institutional web portals (e.g. European Commission DMA Citizen Portal, TYPO3 FormFramework on `einfach-machen.gov.de`). These portals mandate a verified return email address (RFC 5322) to acknowledge receipt and return formal case numbers.
 
-Directly exposing an operator's primary personal email address creates tracking risks, data harvesting vulnerabilities, and potential spam exposure. Operators require an email privacy and masking strategy that balances deliverability, anonymity, operational simplicity, and reply routing.
+Exposing an operator's primary personal email address creates tracking risks, cross-agency data correlation, and exposure to public records disclosures (e.g. IFG / Freedom of Information requests). Conversely, poorly bounded browser automation risks flooding public endpoints, violating Europa Web Guide abuse guidelines and OWASP OAT-014 (Automated Submissions).
 
-Two distinct relay architectures have been proposed:
-1. **Custom Subdomain Relay Mask** (e.g. `<purpose>@<user-subdomain>.mozmail.com` via Mozilla Relay Premium / custom domain routing).
-2. **Random Pseudonymous Relay Pool** (e.g. `<random-id>@mozmail.com` via Mozilla Relay API or pre-allocated pool with deduplication).
+### Anti-Patterns Remediated in this Record
+
+In accordance with Michael Nygard (2011) and ThoughtWorks ADR guidelines, this record addresses:
+- **Sales-Pitch ADR / One-Sided Bias**: Fully documents email forwarding deliverability fragility, SPF/DKIM breakdown risks, and DOM selector maintenance costs alongside privacy benefits.
+- **Untestable Directives**: Replaces vague "avoid spamming" rules with falsifiable thresholds (circuit breakers, 24-hour cooldowns, zero remote egress in CI).
+- **Public Repo PII Leakage**: Preserves strict repo hygiene (Agent Artifact Policy Rule 4) by using generic placeholders in tracked documentation and injecting runtime identities via CLI arguments.
 
 ---
 
 ## Decision Drivers
 
-- **Anonymity & PII Protection**: Preventing correlation between the operator's real identity/surname and the submission.
-- **Operational Complexity**: Ease of automation without requiring interactive browser sessions or secret API tokens.
-- **Deduplication & Collision Prevention**: Ensuring case tracking remains deterministic across multiple filings.
-- **Reply Routing & Longevity**: Ability for European Commission case officers to reply to the submitter and receive legitimate follow-ups.
-- **Rate-Limiting & Domain Reputation**: Ensuring civic forms do not block or flag the sender domain.
+- **Compliance with Fleet Governance**: Direct adherence to `ai-infra` ADR-023 and ADR-019 (Lawfulness, Privacy, and Security by Design).
+- **Public Infrastructure Stewardship**: Protection of public-sector endpoints against unintentional traffic spikes, repeated dry-run probes, and mock record pollution.
+- **Identity Privacy & Minimization**: Decoupling primary inboxes from administrative case databases.
+- **Reply Routing & Forwarding Deliverability**: Ensuring European Commission case officers can send acknowledgements and follow-ups through relay proxies without DMARC rejection.
+- **Operational Simplicity (KISS)**: Prioritizing minimal moving parts and zero secret dependencies for standard statutory filings.
 
 ---
 
@@ -32,52 +39,60 @@ Two distinct relay architectures have been proposed:
 
 ### Option 1: Custom Subdomain Relay Mask (`<purpose>@<subdomain>.mozmail.com`)
 
-In this model, the operator uses a custom relay domain or subdomain (such as Mozilla Relay Premium or a personal domain with catch-all/wildcard routing). Any prefix matching the specific civic submission (e.g. `dma@<subdomain>.mozmail.com`, `kartell@<subdomain>.mozmail.com`) is generated on-the-fly and routes automatically to the destination inbox.
+The operator uses a Mozilla Relay subdomain or personal domain with wildcard forwarding. The alias slug is synthesized programmatically at runtime (e.g. `dma@<subdomain>.mozmail.com`, `bureaucracy@<subdomain>.mozmail.com`).
 
-* **Pros**:
-  * **Zero API Dependency**: Aliases are synthesized deterministically at runtime; no network calls or API tokens required to provision an address before submitting.
-  * **Deterministic Deduplication**: Aliases map directly to the case topic or regulatory scope, making email filtering and archiving straightforward.
-  * **Persistent Inbound Routing**: Institutional replies route through the existing relay configuration without manual mask management.
-  * **Easy Revocation**: If a specific alias is ever harvested or spammed, the individual alias can be disabled or blocked in the relay control panel.
-* **Cons**:
-  * **Partial PII Exposure**: If the operator's custom subdomain reflects their surname (e.g. `<lastname>.mozmail.com`), institutional case workers or database logs can still infer the submitter's identity.
-
----
-
-### Option 2: Random Pseudonymous Relay Pool with Deduplication (`<random-id>@mozmail.com`)
-
-In this model, the agent integrates with the Mozilla Relay API (or consumes a pre-allocated, local SQLite/JSON pool of random relay masks like `x7k9p2a@mozmail.com`). A unique, random address is assigned per regulatory body or filing campaign and persisted locally in an audit ledger to ensure deduplication.
-
-* **Pros**:
-  * **Full Anonymity**: Neither the local part nor the domain reveals the operator's real name or family identity.
-  * **High Domain Trust**: `mozmail.com` is a widely recognized, deliverable consumer relay service that bypasses typical disposable-email blocklists.
-  * **Compartmentalized Blast Radius**: A leaked or targeted submission exposes only an ephemeral hash with no relation to other civic submissions.
-* **Cons**:
-  * **API / Credential Overhead**: Generating masks programmatically requires interacting with Mozilla Relay endpoints or maintaining a pre-generated key pool.
-  * **State Management**: Requires local ledger state (`data/relay-aliases.json`) to track which mask corresponds to which regulatory case number for deduplication.
-  * **Quota Limits**: Free/standard tier accounts have mask creation caps (e.g. 5 masks on free tier; unlimited on premium, but subject to rate limits).
+* **Strengths**:
+  - **Zero API Dependency**: Synthesized locally; requires no API tokens, external sessions, or credential management.
+  - **Deterministic Deduplication**: Slugs map 1:1 to regulatory scope, simplifying archiving and folder rules.
+  - **Persistent Inbound Routing**: Managed permanently by Mozilla Relay's backend (AWS SES / Postfix).
+  - **Granular Revocation**: Any individual slug can be blocked independently if spammed.
+* **Accepted Trade-offs & Negative Consequences**:
+  - **Partial PII Exposure**: If the subdomain contains the operator's surname (e.g. `<surname>.mozmail.com`), institutional systems observe the family name. This is acceptable for Class A statutory filings (e.g. DMA complaints) because statutory procedure already mandates legal First and Last name.
+  - **Strict Prohibition for Anonymous Filings**: Option 1 is strictly forbidden for Class B (whistleblower/anonymous) filings.
 
 ---
 
-## Architectural Comparison Matrix
+### Option 2: Random Pseudonymous Relay Pool (`<random-id>@mozmail.com`)
 
-| Evaluation Dimension | Option 1: Subdomain Relay (`<slug>@<subdomain>.mozmail.com`) | Option 2: Random Relay Pool (`<hash>@mozmail.com`) |
-|---|---|---|
-| **Identity Obfuscation** | Moderate (hides primary inbox, may reveal surname domain) | High (complete pseudonymity, random hash) |
-| **Automation Overhead** | None (purely client-side string synthesis) | Medium (requires API call or pre-allocated pool ledger) |
-| **Deduplication Strategy** | Built-in by semantic convention (`dma@...`, `ozg@...`) | Requires local ledger mapping (`campaign_id -> mask`) |
-| **Institutional Reply Path** | High reliability (permanent forwarder) | High reliability (managed by Relay backend) |
-| **Secret Storage Required** | None | Relay API token / Session cookie |
+The agent provisions random masks (e.g. `k8s2x9p@mozmail.com`) via Relay API or draws from a pre-allocated local pool tracked in a deduplication ledger (`data/relay-ledger.json`).
+
+* **Strengths**:
+  - **Complete Identity Obfuscation**: Neither local part nor domain reveals family identity.
+  - **High Domain Trust**: `mozmail.com` root domain enjoys standard consumer deliverability.
+* **Accepted Trade-offs & Negative Consequences**:
+  - **API & Credential Overhead**: Requires storing Relay tokens and handling session refresh.
+  - **State Ledger Complexity**: Requires tracking `case_id <-> mask` mappings to avoid orphan aliases or collisions.
 
 ---
 
-## Recommendation and Phased Strategy
+## Technical Standards & Deliverability Protocol
 
-1. **Phase 1 (Immediate / Pragmatic)**:
-   Use **Option 1** (`dma@<subdomain>.mozmail.com`) for direct civic and regulatory filings where the operator is filing under their legal name (as the European Commission DMA Citizen form explicitly requests First and Last Name). Semantic aliases allow clean inbox separation with zero external moving parts.
+Under RFC 7489 (DMARC), RFC 8617 (ARC), and RFC 7960:
+1. **SPF Invalidation & SRS**: Email forwarding changes the sending MTA IP to Mozilla Relay, invalidating SPF for the original sender (`ec.europa.eu`). Mozilla Relay rewrites the envelope sender via Sender Rewriting Scheme (SRS) to validate against `mozmail.com`.
+2. **DKIM Preservation**: Delivery through strict receiver mailboxes (`p=reject`) depends entirely on intact DKIM signatures. Mozilla Relay preserves message body and header integrity unmodified, maintaining valid DKIM authentication.
+3. **Receipt Recovery Runbook**: If an institutional confirmation receipt does not arrive within 15 minutes of live submission, the operator verifies Relay dashboard logs. Agents MUST NOT re-submit the form, as doing so creates duplicate official administrative records.
 
-2. **Phase 2 (Whistleblower & Anonymous Submissions)**:
-   When expanding the framework to whistleblower portals or anonymous feedback paths where identity must remain entirely confidential:
-   * Implement an automated Mozilla Relay client (`scripts/relay-manager.ts`).
-   * Maintain a deduplicated local state ledger in `data/relay-pool.json`.
-   * Automatically allocate a random `<hash>@mozmail.com` forwarder per submission batch.
+---
+
+## Project Implementation Invariants for `einfach-machen-agent`
+
+1. **Strict Offline Fixture Gate**: All form parsing and schema validations in `tests/dma.test.ts` execute against local offline fixtures. CI runs with zero remote egress.
+2. **Offscreen Browser Displacement**: Live dry-run verification uses Playwright with `--window-position=-32000,-32000` to prevent desktop distraction, capturing an audit screenshot in `logs/dma-dryrun-<timestamp>.png`.
+3. **Circuit Breaker on Challenge**: If the portal returns HTTP 429, 503, or displays a CAPTCHA, execution aborts immediately ($N = 1$). No automated retry or CAPTCHA circumvention is permitted.
+4. **Payload Bounds Gate**: Submissions enforce character limits before browser launch: Subject $\le 100$ characters, Message body $\le 2000$ characters.
+5. **Runtime PII Injection**: Zero personal names or email subdomains are committed to the repository. The script mandates runtime arguments (`--first-name`, `--last-name`, `--email`).
+6. **Class C4 Gate for Live Dispatch**: `--live` submission requires an unlapsed Class C4 approval card and explicit operator instruction.
+
+---
+
+## Consequences
+
+### Positive
+- Enforces strict public infrastructure stewardship matching EU Europa Web Guide standards.
+- Shields operator's primary inbox from public records aggregation.
+- PII-free codebase suitable for public repository hosting.
+
+### Negative & Accepted Operational Costs
+- Brittle DOM selectors require periodic maintenance against EU portal redesigns.
+- Email relay introduces a 1-5 minute delay for confirmation receipts.
+- Live submissions are throttled by mandatory 24-hour cooldowns.
