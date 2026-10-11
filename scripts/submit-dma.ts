@@ -233,7 +233,20 @@ export async function submitDmaComplaint(
     }
 
     await submitBtn.click({ force: true });
-    await page.waitForTimeout(5000);
+    try {
+      await page.waitForLoadState('networkidle', { timeout: 15000 });
+    } catch {
+      await page.waitForTimeout(5000);
+    }
+
+    const currentUrl = page.url();
+    console.log(`📍 Submission target URL: ${currentUrl}`);
+
+    const confirmationBanner = await page.$('.messages--status, [role="status"], [role="alert"], .alert-success');
+    if (confirmationBanner) {
+      const bannerText = (await confirmationBanner.innerText()).trim();
+      console.log(`📋 Confirmation: ${bannerText}`);
+    }
 
     const liveScreenshot = path.join('logs', `dma-submission-${timestamp}.png`);
     await page.screenshot({ path: liveScreenshot, fullPage: true });
