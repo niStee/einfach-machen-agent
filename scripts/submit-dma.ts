@@ -1,6 +1,10 @@
+/* eslint-disable security/detect-non-literal-fs-filename */
 import { chromium, Browser, BrowserContext, Page } from 'playwright';
 import fs from 'fs';
 import path from 'path';
+
+export const LOGS_DIR = path.resolve(__dirname, '..', 'logs');
+export const AUDIT_LOG_FILE = path.resolve(LOGS_DIR, 'dma-submissions.json');
 
 export interface DmaComplaintPayload {
   firstName: string;
@@ -139,9 +143,8 @@ export async function submitDmaComplaint(
     await page.waitForTimeout(2000);
 
     // Ensure logs directory exists
-    const logsDir = path.join(__dirname, '../logs');
-    if (!fs.existsSync(logsDir)) {
-      fs.mkdirSync(logsDir, { recursive: true });
+    if (!fs.existsSync(LOGS_DIR)) {
+      fs.mkdirSync(LOGS_DIR, { recursive: true });
     }
 
     // 1. Fill First Name
@@ -210,7 +213,7 @@ export async function submitDmaComplaint(
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 
     if (isDryRun) {
-      const screenshotPath = path.join(logsDir, `dma-dryrun-${timestamp}.png`);
+      const screenshotPath = path.resolve(LOGS_DIR, `dma-dryrun-${timestamp}.png`);
       await page.screenshot({ path: screenshotPath, fullPage: true });
       console.log(`🧪 Dry-Run Mode Active: Form verified and filled successfully without submitting.`);
       console.log(`📸 Audit screenshot saved: ${screenshotPath}`);
@@ -235,11 +238,10 @@ export async function submitDmaComplaint(
     await submitBtn.click({ force: true });
     await page.waitForTimeout(5000);
 
-    const liveScreenshot = path.join(logsDir, `dma-submission-${timestamp}.png`);
+    const liveScreenshot = path.resolve(LOGS_DIR, `dma-submission-${timestamp}.png`);
     await page.screenshot({ path: liveScreenshot, fullPage: true });
 
     // Record submission to audit log
-    const auditLogFile = path.join(logsDir, 'dma-submissions.json');
     const record = {
       timestamp: new Date().toISOString(),
       topic: payload.topic,
@@ -249,15 +251,15 @@ export async function submitDmaComplaint(
     };
 
     let history = [];
-    if (fs.existsSync(auditLogFile)) {
+    if (fs.existsSync(AUDIT_LOG_FILE)) {
       try {
-        history = JSON.parse(fs.readFileSync(auditLogFile, 'utf8'));
+        history = JSON.parse(fs.readFileSync(AUDIT_LOG_FILE, 'utf8'));
       } catch {
         history = [];
       }
     }
     history.push(record);
-    fs.writeFileSync(auditLogFile, JSON.stringify(history, null, 2));
+    fs.writeFileSync(AUDIT_LOG_FILE, JSON.stringify(history, null, 2));
 
     console.log('🎉 DMA Complaint successfully submitted and audited!');
     await browser.close();
@@ -275,23 +277,23 @@ export async function submitDmaComplaint(
   }
 }
 
+export function getArgValue(args: string[], flag: string): string | undefined {
+  const idx = args.indexOf(flag);
+  if (idx !== -1 && idx + 1 < args.length) {
+    return args[idx + 1];
+  }
+  return undefined;
+}
+
 // CLI Execution entry point
 if (import.meta.main) {
   const args = process.argv.slice(2);
   const isLive = args.includes('--live');
   const dryRun = !isLive;
 
-  function getArgValue(flag: string): string | undefined {
-    const idx = args.indexOf(flag);
-    if (idx !== -1 && idx + 1 < args.length) {
-      return args[idx + 1];
-    }
-    return undefined;
-  }
-
-  const firstName = getArgValue('--first-name');
-  const lastName = getArgValue('--last-name');
-  const email = getArgValue('--email');
+  const firstName = getArgValue(args, '--first-name');
+  const lastName = getArgValue(args, '--last-name');
+  const email = getArgValue(args, '--email');
 
   console.log(`\n=== DMA Citizen Complaint Automation ===`);
   console.log(`Mode: ${dryRun ? 'DRY-RUN (Safe mode, will not submit)' : 'LIVE SUBMISSION'}\n`);

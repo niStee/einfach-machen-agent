@@ -7,10 +7,10 @@ import {
   type DmaComplaintPayload
 } from '../scripts/submit-dma';
 
+import pkg from '../package.json';
+
 describe('DMA Citizen Submission Module (Digital Markets Act)', () => {
   test('package.json defines submit:dma script', () => {
-    const pkgPath = path.join(__dirname, '../package.json');
-    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
     expect(pkg.scripts['submit:dma']).toBeDefined();
     expect(pkg.scripts['submit:dma']).toBe('bun scripts/submit-dma.ts');
   });
