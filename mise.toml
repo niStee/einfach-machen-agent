@@ -1,3 +1,0 @@
-# Project-local tools for the spec-driven development pilot (OpenSpec).
-[tools]
-"npm:@fission-ai/openspec" = "1.14.1"

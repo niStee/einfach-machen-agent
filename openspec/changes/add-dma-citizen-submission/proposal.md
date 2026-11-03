@@ -12,7 +12,10 @@ Expanding `einfach-machen-agent` from federal German bureaucracy reduction (`ein
 - Pre-filled compliant report documenting circumvention of DMA Articles 6(4) and 6(7) via Google Play Integrity API.
 - Form field constraint validation (Subject <= 100 chars, Message <= 2,000 chars, valid email).
 - Safe dry-run default mode (`bun run submit:dma`) with full-page audit screenshot capture (`logs/dma-dryrun-*.png`).
-- Explicit `--live` flag for actual submission to the European Commission DMA team.
+- Explicit `--live` flag guarded by exact payload confirmation (`--confirm`), complete command-line identity, and reviewed message input (`--message-file`).
+- Response circuit breaker for HTTP 429, HTTP 503, and CAPTCHA, with audit screenshots and no retries or challenge handling.
+- Repository-owned 24-hour cooldown and JSON-lines live audit recording under the gitignored log directory.
+- Synthetic offline form fixture with browser-independent selector tests and negative controls.
 - Automated test suite (`tests/dma.test.ts`) covering positive/negative validation pairs and sensitivity probes.
 - Repository documentation updates in `AGENTS.md` and `README.md`.
 
