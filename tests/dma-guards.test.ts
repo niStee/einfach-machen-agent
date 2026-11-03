@@ -183,6 +183,25 @@ describe('DMA payload confirmation', () => {
     expect(dma.checkLive({ args, payload: placeholderPayload, identityProvided }))
       .toEqual({ ok: false, reason: 'identity-required' });
   });
+
+  test('checkLive refuses each placeholder field on its own, with a real identity otherwise', () => {
+    const placeholders = [
+      { firstName: 'EU' },
+      { firstName: 'eu' },
+      { lastName: 'Citizen' },
+      { lastName: 'CITIZEN' },
+      { email: 'citizen@example.eu' },
+      { email: 'Citizen@Example.EU' }
+    ];
+    for (const placeholder of placeholders) {
+      const identityProvided = { ...baseIdentity, ...placeholder };
+      expect(dma.checkLive({ args: liveArgs, payload: basePayload, identityProvided }))
+        .toEqual({ ok: false, reason: 'identity-required' });
+    }
+    // Control: the same call with the real identity passes, so the refusals above come from the placeholder.
+    expect(dma.checkLive({ args: liveArgs, payload: basePayload, identityProvided: baseIdentity }))
+      .toEqual({ ok: true });
+  });
 });
 
 describe('DMA live cooldown and audit records', () => {
