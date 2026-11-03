@@ -50,8 +50,8 @@ export interface DmaValidationResult {
 
 export const DMA_FORM_URL = 'https://digital-markets-act.ec.europa.eu/contact-us-eu-citizen_en';
 export const DMA_LIVE_COOLDOWN_MS = 24 * 60 * 60 * 1000;
-export const DMA_AUDIT_PATH = path.join('logs', 'dma-submissions.json');
-export const DMA_LAST_LIVE_PATH = path.join('logs', 'dma-last-live');
+export const DMA_AUDIT_PATH = 'logs/dma-submissions.json';
+export const DMA_LAST_LIVE_PATH = 'logs/dma-last-live';
 
 export const DMA_SELECTORS = {
   firstName: 'input[name="oe_first_name[0][value]"], #edit-oe-first-name-0-value',
@@ -68,7 +68,7 @@ export const DMA_SELECTORS = {
 export function assessResponse(input: {
   status: number;
   headers: Record<string, string>;
-  html: string;
+  pageContent: string;
 }): DmaResponseAssessment {
   if (input.status === 429) {
     const retryAfter = Object.entries(input.headers)
@@ -83,10 +83,19 @@ export function assessResponse(input: {
     return { ok: false, reason: 'unavailable' };
   }
 
-  const html = input.html.toLowerCase();
-  const hasCaptchaIframe = /<iframe\b[^>]*\bsrc\s*=\s*["'][^"']*captcha/i.test(input.html)
-    || /<iframe\b[^>]*\bsrc\s*=\s*[^\s>]*captcha/i.test(input.html);
-  if (html.includes('g-recaptcha') || html.includes('h-captcha') || hasCaptchaIframe) {
+  const pageContent = input.pageContent.toLowerCase();
+  let hasCaptchaIframe = false;
+  let iframeStart = pageContent.indexOf('<iframe');
+  while (iframeStart !== -1) {
+    const tagEnd = pageContent.indexOf('>', iframeStart);
+    const iframeTag = pageContent.slice(iframeStart, tagEnd === -1 ? undefined : tagEnd + 1);
+    if (iframeTag.includes('captcha')) {
+      hasCaptchaIframe = true;
+      break;
+    }
+    iframeStart = pageContent.indexOf('<iframe', iframeStart + '<iframe'.length);
+  }
+  if (pageContent.includes('g-recaptcha') || pageContent.includes('h-captcha') || hasCaptchaIframe) {
     return { ok: false, reason: 'challenge' };
   }
   if (input.status < 200 || input.status >= 300) {
@@ -118,15 +127,12 @@ export function checkLive(input: {
   }
 
   const identity = input.identityProvided;
-  const placeholders: Record<keyof DmaLiveIdentity, string> = {
-    firstName: 'EU',
-    lastName: 'Citizen',
-    email: 'citizen@example.eu'
-  };
-  const identityComplete = (Object.keys(placeholders) as Array<keyof DmaLiveIdentity>).every(field => {
-    const value = identity[field]?.trim();
-    return Boolean(value) && value?.toLowerCase() !== placeholders[field].toLowerCase();
-  });
+  const firstName = identity.firstName?.trim();
+  const lastName = identity.lastName?.trim();
+  const email = identity.email?.trim();
+  const identityComplete = Boolean(firstName) && firstName?.toLowerCase() !== 'eu'
+    && Boolean(lastName) && lastName?.toLowerCase() !== 'citizen'
+    && Boolean(email) && email?.toLowerCase() !== 'citizen@example.eu';
   if (!identityComplete) {
     return { ok: false, reason: 'identity-required' };
   }
@@ -147,30 +153,28 @@ export function cooldownRemainingMs(lastLiveIso: string | null | undefined, nowM
   return Math.max(0, DMA_LIVE_COOLDOWN_MS - (nowMs - lastLiveMs));
 }
 
-export function readLastLive(recordPath: string): string | null {
-  if (!fs.existsSync(recordPath)) {
+export function readLastLive(): string | null {
+  if (!fs.existsSync(DMA_LAST_LIVE_PATH)) {
     return null;
   }
-  return fs.readFileSync(recordPath, 'utf8').trim() || null;
+  return fs.readFileSync(DMA_LAST_LIVE_PATH, 'utf8').trim() || null;
 }
 
-export function writeLastLive(recordPath: string, iso: string): void {
-  fs.mkdirSync(path.dirname(recordPath), { recursive: true });
-  fs.writeFileSync(recordPath, `${iso}\n`, { encoding: 'utf8', mode: 0o600 });
+export function writeLastLive(iso: string): void {
+  fs.mkdirSync('logs', { recursive: true });
+  fs.writeFileSync(DMA_LAST_LIVE_PATH, `${iso}\n`, { encoding: 'utf8', mode: 0o600 });
 }
 
 export function recordLiveSubmission(input: {
   result: DmaSubmissionResult;
-  auditPath: string;
-  lastLivePath: string;
   recordedAt: string;
 }): void {
   if (input.result.dryRun) {
     return;
   }
-  fs.mkdirSync(path.dirname(input.auditPath), { recursive: true });
-  fs.appendFileSync(input.auditPath, `${JSON.stringify(input.result)}\n`, { encoding: 'utf8', mode: 0o600 });
-  writeLastLive(input.lastLivePath, input.recordedAt);
+  fs.mkdirSync('logs', { recursive: true });
+  fs.appendFileSync(DMA_AUDIT_PATH, `${JSON.stringify(input.result)}\n`, { encoding: 'utf8', mode: 0o600 });
+  writeLastLive(input.recordedAt);
 }
 
 export function buildLaunchArgs(): string[] {
@@ -286,7 +290,7 @@ export async function submitDmaComplaint(
     const assessment = assessResponse({
       status: response?.status() ?? 0,
       headers: response?.headers() ?? {},
-      html: await page.content()
+      pageContent: await page.content()
     });
 
     // Ensure logs directory exists
@@ -479,10 +483,10 @@ export async function runDmaCli(
         console.log('UNREVIEWED SAMPLE COMPLAINT TEXT: the built-in text is a dry-run sample only, not a reviewed statement.');
       }
       console.log(`Payload fingerprint: ${payloadFingerprint(payload)}`);
-      console.log('A live run requires --confirm with this exact payload fingerprint, --message-file PATH, and a complete command-line identity.');
+      console.log('A live run requires --confirm with this exact payload fingerprint, --message-file FILE, and a complete command-line identity.');
     } else {
       if (!messageFile) {
-        throw new Error('Live submission requires --message-file PATH; the built-in text is only a dry-run sample.');
+        throw new Error('Live submission requires --message-file FILE; the built-in text is only a dry-run sample.');
       }
       const liveCheck = checkLive({
         args,
@@ -498,7 +502,7 @@ export async function runDmaCli(
         throw new Error(messages[liveCheck.reason]);
       }
 
-      const remainingMs = cooldownRemainingMs(readLastLive(DMA_LAST_LIVE_PATH), Date.now());
+      const remainingMs = cooldownRemainingMs(readLastLive(), Date.now());
       if (remainingMs > 0) {
         const remainingHours = (remainingMs / (60 * 60 * 1000)).toFixed(2);
         throw new Error(`Live submission refused by the repository 24-hour cooldown; ${remainingHours} hours remain.`);
@@ -522,8 +526,6 @@ export async function runDmaCli(
             timestamp: new Date().toISOString(),
             error: error instanceof Error ? error.message : String(error)
           },
-          auditPath: DMA_AUDIT_PATH,
-          lastLivePath: DMA_LAST_LIVE_PATH,
           recordedAt: new Date().toISOString()
         });
       }
@@ -533,8 +535,6 @@ export async function runDmaCli(
     if (isLive) {
       recordLiveSubmission({
         result,
-        auditPath: DMA_AUDIT_PATH,
-        lastLivePath: DMA_LAST_LIVE_PATH,
         recordedAt: new Date().toISOString()
       });
     }

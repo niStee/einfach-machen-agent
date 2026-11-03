@@ -1,6 +1,5 @@
-import { afterAll, describe, expect, test } from 'bun:test';
+import { afterAll, afterEach, beforeEach, describe, expect, test } from 'bun:test';
 import fs from 'node:fs';
-import path from 'node:path';
 import { chromium, type Browser } from 'playwright';
 import * as dma from '../scripts/submit-dma';
 import type { DmaComplaintPayload, DmaSubmissionResult } from '../scripts/submit-dma';
@@ -33,7 +32,9 @@ const liveArgs = [
   '--confirm', expectedFingerprint
 ];
 
-const fixtureHtml = fs.readFileSync(path.join(import.meta.dir, 'fixtures', 'dma-form.html'), 'utf8');
+const fixtureHtml = fs.readFileSync('tests/fixtures/dma-form.html', 'utf8');
+const originalWorkingDirectory = process.cwd();
+let testWorkingDirectory = '';
 const selectorFields = [
   'firstName',
   'lastName',
@@ -60,7 +61,7 @@ afterAll(async () => {
   await browser?.close();
 });
 
-async function countWithHtmlRewriter(html: string, selector: string): Promise<number> {
+async function countWithHtmlRewriter(pageContent: string, selector: string): Promise<number> {
   let count = 0;
   const output = new HTMLRewriter()
     .on(selector, {
@@ -68,18 +69,28 @@ async function countWithHtmlRewriter(html: string, selector: string): Promise<nu
         count += 1;
       }
     })
-    .transform(new Response(html));
+    .transform(new Response(pageContent));
   await output.text();
   return count;
 }
 
 function temporaryDirectory(): string {
-  return fs.mkdtempSync(path.join(process.cwd(), 'tests', '.dma-guards-'));
+  return fs.mkdtempSync('tests/.dma-guards-');
 }
+
+beforeEach(() => {
+  testWorkingDirectory = temporaryDirectory();
+  process.chdir(testWorkingDirectory);
+});
+
+afterEach(() => {
+  process.chdir(originalWorkingDirectory);
+  fs.rmSync(testWorkingDirectory, { recursive: true, force: true });
+});
 
 describe('DMA response circuit breaker', () => {
   test('assessResponse returns ok for a normal 200 page', () => {
-    expect(dma.assessResponse({ status: 200, headers: {}, html: '<form>Contact</form>' }))
+    expect(dma.assessResponse({ status: 200, headers: {}, pageContent: '<form>Contact</form>' }))
       .toEqual({ ok: true });
   });
 
@@ -87,12 +98,12 @@ describe('DMA response circuit breaker', () => {
     expect(dma.assessResponse({
       status: 429,
       headers: { 'Retry-After': '120' },
-      html: 'Too many requests'
+      pageContent: 'Too many requests'
     })).toEqual({ ok: false, reason: 'rate-limited', retryAfter: '120' });
   });
 
   test('assessResponse marks HTTP 503 unavailable', () => {
-    expect(dma.assessResponse({ status: 503, headers: {}, html: 'Unavailable' }))
+    expect(dma.assessResponse({ status: 503, headers: {}, pageContent: 'Unavailable' }))
       .toEqual({ ok: false, reason: 'unavailable' });
   });
 
@@ -102,8 +113,8 @@ describe('DMA response circuit breaker', () => {
       '<div class="h-captcha"></div>',
       '<iframe src="https://challenge.invalid/captcha/widget"></iframe>'
     ];
-    for (const html of captchaPages) {
-      expect(dma.assessResponse({ status: 200, headers: {}, html }))
+    for (const pageContent of captchaPages) {
+      expect(dma.assessResponse({ status: 200, headers: {}, pageContent }))
         .toEqual({ ok: false, reason: 'challenge' });
     }
   });
@@ -112,7 +123,7 @@ describe('DMA response circuit breaker', () => {
     expect(dma.assessResponse({
       status: 200,
       headers: {},
-      html: '<p>The word captcha in prose is not a challenge widget.</p>'
+      pageContent: '<p>The word captcha in prose is not a challenge widget.</p>'
     })).toEqual({ ok: true });
   });
 });
@@ -188,67 +199,44 @@ describe('DMA live cooldown and audit records', () => {
     expect(dma.cooldownRemainingMs(lastLiveIso, NOW_MS)).toBe(DAY_MS - elapsedMs);
   });
 
-  test('last-live record round-trips through an injected path', () => {
-    const directory = temporaryDirectory();
-    try {
-      const recordPath = path.join(directory, 'state', 'last-live');
-      const iso = new Date(NOW_MS).toISOString();
-      dma.writeLastLive(recordPath, iso);
-      expect(dma.readLastLive(recordPath)).toBe(iso);
-    } finally {
-      fs.rmSync(directory, { recursive: true, force: true });
-    }
+  test('last-live record round-trips through the fixed record path', () => {
+    const iso = new Date(NOW_MS).toISOString();
+    dma.writeLastLive(iso);
+    expect(dma.readLastLive()).toBe(iso);
+    expect(fs.readFileSync('logs/dma-last-live', 'utf8')).toBe(`${iso}\n`);
   });
 
-  test('readLastLive returns null when the injected path has no record', () => {
-    const directory = temporaryDirectory();
-    try {
-      expect(dma.readLastLive(path.join(directory, 'missing'))).toBeNull();
-    } finally {
-      fs.rmSync(directory, { recursive: true, force: true });
-    }
+  test('readLastLive returns null when the fixed record path has no record', () => {
+    expect(dma.readLastLive()).toBeNull();
+    expect(fs.existsSync('logs/dma-last-live')).toBe(false);
   });
 
   test('recordLiveSubmission appends one JSON line and writes the cooldown record', () => {
-    const directory = temporaryDirectory();
-    try {
-      const auditPath = path.join(directory, 'logs', 'submissions.json');
-      const lastLivePath = path.join(directory, 'logs', 'last-live');
-      const result: DmaSubmissionResult = {
-        success: false,
-        dryRun: false,
-        timestamp: new Date(NOW_MS).toISOString(),
-        reason: 'rate-limited',
-        retryAfter: '120',
-        screenshotPath: 'audit.png'
-      };
-      const recordedAt = new Date(NOW_MS + 1000).toISOString();
-      dma.recordLiveSubmission({ result, auditPath, lastLivePath, recordedAt });
-      const lines = fs.readFileSync(auditPath, 'utf8').trimEnd().split('\n');
-      expect(lines).toHaveLength(1);
-      expect(JSON.parse(lines[0])).toEqual(result);
-      expect(dma.readLastLive(lastLivePath)).toBe(recordedAt);
-    } finally {
-      fs.rmSync(directory, { recursive: true, force: true });
-    }
+    const result: DmaSubmissionResult = {
+      success: false,
+      dryRun: false,
+      timestamp: new Date(NOW_MS).toISOString(),
+      reason: 'rate-limited',
+      retryAfter: '120',
+      screenshotPath: 'audit.png'
+    };
+    const recordedAt = new Date(NOW_MS + 1000).toISOString();
+    dma.recordLiveSubmission({ result, recordedAt });
+    const lines = fs.readFileSync('logs/dma-submissions.json', 'utf8').trimEnd().split('\n');
+    expect(lines).toHaveLength(1);
+    expect(JSON.parse(lines[0])).toEqual(result);
+    expect(dma.readLastLive()).toBe(recordedAt);
   });
 
   test('recordLiveSubmission does not record a dry run as a live attempt', () => {
-    const directory = temporaryDirectory();
-    try {
-      const auditPath = path.join(directory, 'submissions.json');
-      const lastLivePath = path.join(directory, 'last-live');
-      const result: DmaSubmissionResult = {
-        success: true,
-        dryRun: true,
-        timestamp: new Date(NOW_MS).toISOString()
-      };
-      dma.recordLiveSubmission({ result, auditPath, lastLivePath, recordedAt: new Date(NOW_MS).toISOString() });
-      expect(fs.existsSync(auditPath)).toBe(false);
-      expect(fs.existsSync(lastLivePath)).toBe(false);
-    } finally {
-      fs.rmSync(directory, { recursive: true, force: true });
-    }
+    const result: DmaSubmissionResult = {
+      success: true,
+      dryRun: true,
+      timestamp: new Date(NOW_MS).toISOString()
+    };
+    dma.recordLiveSubmission({ result, recordedAt: new Date(NOW_MS).toISOString() });
+    expect(fs.existsSync('logs/dma-submissions.json')).toBe(false);
+    expect(fs.existsSync('logs/dma-last-live')).toBe(false);
   });
 });
 
@@ -340,12 +328,11 @@ describe('DMA CLI guard wiring without a browser', () => {
   });
 
   test('runDmaCli fingerprints explicit message-file content in a dry run', async () => {
-    const directory = temporaryDirectory();
     const output: string[] = [];
     const originalLog = console.log;
     console.log = (...values: unknown[]) => output.push(values.join(' '));
     try {
-      const messagePath = path.join(directory, 'complaint.txt');
+      const messagePath = 'complaint.txt';
       fs.writeFileSync(messagePath, 'Explicitly reviewed test message.');
       let submittedPayload: DmaComplaintPayload | undefined;
       const status = await dma.runDmaCli(['--message-file', messagePath], async (payload, _options) => {
@@ -358,7 +345,6 @@ describe('DMA CLI guard wiring without a browser', () => {
       expect(output.join('\n')).not.toContain('UNREVIEWED SAMPLE COMPLAINT TEXT');
     } finally {
       console.log = originalLog;
-      fs.rmSync(directory, { recursive: true, force: true });
     }
   });
 
