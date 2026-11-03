@@ -12,7 +12,7 @@
 
 Automated API discovery and submission framework for [einfach-machen.gov.de](https://einfach-machen.gov.de/) using Playwright-MCP and Bun.
 
-> **[AGENTS.md](./AGENTS.md) Compliant**: Built exclusively using Bun, git identity overrides, and structured project paths under `~/Projects/einfach-machen-agent`.
+> **[AGENTS.md](./AGENTS.md) Compliant**: Built exclusively using Bun with repository-specific git identity overrides.
 
 ## Features
 
@@ -26,7 +26,7 @@ Automated API discovery and submission framework for [einfach-machen.gov.de](htt
 
 1. **Setup dependencies**:
    ```bash
-   cd ~/Projects/einfach-machen-agent
+   cd einfach-machen-agent
    bun install
    bunx playwright install chromium
    ```
@@ -46,7 +46,34 @@ Automated API discovery and submission framework for [einfach-machen.gov.de](htt
    bun run submit
    ```
 
-5. **Run Batch Submissions**:
+5. **Test DMA Citizen Complaint Submission (Dry-Run Mode)**:
+   ```bash
+   bun run submit:dma
+   ```
+   Dry run is always the default. It prints the fingerprint of the exact payload. When placeholders are used, it prints a `PLACEHOLDER IDENTITY` notice; the built-in complaint text is clearly labelled as an unreviewed sample.
+
+   To prepare a live submission, put text you have personally reviewed in a file and dry-run that exact payload:
+   ```bash
+   bun run submit:dma \
+     --first-name '<legal-first-name>' \
+     --last-name '<legal-last-name>' \
+     --email '<reply-address>' \
+     --message-file ./complaint.txt
+   ```
+   Then repeat the same arguments with `--live` and the fingerprint printed by that dry run:
+   ```bash
+   bun run submit:dma --live \
+     --first-name '<legal-first-name>' \
+     --last-name '<legal-last-name>' \
+     --email '<reply-address>' \
+     --message-file ./complaint.txt \
+     --confirm '<12-character-payload-fingerprint>'
+   ```
+   Live mode refuses missing or placeholder identity values, a missing message file, and a missing or stale confirmation. Changing any identity, topic, subject, or message field requires a new dry run and fingerprint. There are no `DMA_*` environment-variable identity fallbacks.
+
+   A live attempt is also refused within 24 hours of the last recorded live attempt. This cooldown is the repository's own anti-duplication rule, not a statutory period. Live results append one JSON line to `logs/dma-submissions.json`, and the cooldown state is stored under `logs/`; that directory is gitignored. HTTP 429, HTTP 503, and CAPTCHA responses stop immediately with an audit screenshot and no retry or CAPTCHA handling. A retained `Retry-After` value is included in the result.
+
+6. **Run Batch Submissions**:
    ```bash
    bun run batch
    ```

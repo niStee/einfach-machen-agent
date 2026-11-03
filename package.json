@@ -6,6 +6,7 @@
   "scripts": {
     "discover": "bun scripts/discover-api.ts",
     "submit": "bun scripts/submit-feedback.ts",
+    "submit:dma": "bun scripts/submit-dma.ts",
     "batch": "bun scripts/batch-submit.ts",
     "docs:import": "bun scripts/import-docs.ts",
     "typecheck": "tsc --noEmit",
