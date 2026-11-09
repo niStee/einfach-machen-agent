@@ -9,3 +9,6 @@ coverage/
 docs/api-discovery.json
 docs/step*.png
 docs/submission_screenshots/
+
+# Claude Code per-user approvals: the file can hold pasted credentials, never commit it
+.claude/settings.local.json
