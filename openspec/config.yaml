@@ -1,0 +1,26 @@
+schema: spec-driven
+
+# Spec-driven development for einfach-machen-agent (2026-11-11).
+context: |
+  Order of work: spec delta first, then failing tests derived from its scenarios,
+  then the code. A spec never replaces tests.
+  Every guard or regression test ships as a positive/negative pair and is only
+  trusted after a recorded sensitivity probe: weaken the guard, see the test fail,
+  restore it.
+  Tests never contact a live public endpoint. They run against local synthetic
+  fixtures and a stubbed browser page.
+  A live submission creates an official record at a public institution. It is
+  never the default and never automatic.
+
+rules:
+  proposal:
+    - Keep it under 500 words and link the issue it serves
+    - State what is out of scope; it is as important as the scope
+    - One vertical slice that can be merged on its own
+  specs:
+    - Requirements use SHALL and each has at least one WHEN/THEN scenario
+    - Describe observable behavior only; no file names, types or internal APIs
+    - Include the failure and refusal scenarios, not just the happy path
+  tasks:
+    - The first task writes the failing tests for the scenarios
+    - Every task names the test or check that proves it done
