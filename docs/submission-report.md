@@ -64,7 +64,7 @@ A comprehensive audit was performed against current 2026 German e-government reg
 
 ## ARCHITECTURE & DATA STORAGE
 
-- Active Pending Proposals: [`data/feedbacks.json`](file:///home/nils/Projects/einfach-machen-agent/data/feedbacks.json) (`[]` when clear)
-- Completed Submissions Archive: [`data/submitted_feedbacks.json`](file:///home/nils/Projects/einfach-machen-agent/data/submitted_feedbacks.json) (21 entries)
+- Active Pending Proposals: [`data/feedbacks.json`](../data/feedbacks.json) (`[]` when clear)
+- Completed Submissions Archive: [`data/submitted_feedbacks.json`](../data/submitted_feedbacks.json) (21 entries)
 - Imported Research Docs: `docs/perplexity/` (Git-ignored for privacy)
 - Automation Engine: Playwright TypeScript runner with minimized offscreen browser window (`--window-position=-32000,-32000`)

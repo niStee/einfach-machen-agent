@@ -1,4 +1,5 @@
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 
 export interface ImportResult {
@@ -10,7 +11,7 @@ export interface ImportResult {
  * Pulls strictly relevant, public-safe research markdown files from perplexity-agent exports into local docs/perplexity.
  */
 export function importDocs(): ImportResult {
-  const homeDir = process.env.HOME || '/home/nils';
+  const homeDir = process.env.HOME || os.homedir();
   const sourceDir = path.join(homeDir, 'Projects/perplexity-agent/exports/categorized/einfach-machen');
   const targetDir = path.join(__dirname, '../docs/perplexity');
 
